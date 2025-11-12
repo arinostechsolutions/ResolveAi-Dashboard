@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import apiClient from "@/lib/api-client";
 
 type ReportListItem = {
@@ -19,7 +19,7 @@ type ReportListItem = {
   };
 };
 
-type ReportsListResponse = {
+export type ReportsListResponse = {
   cityId: string;
   page: number;
   limit: number;
@@ -36,6 +36,28 @@ type UseReportsListParams = {
   limit?: number;
 };
 
+async function fetchReportsList({
+  cityId,
+  status = "all",
+  search,
+  page = 1,
+  limit = 10,
+}: UseReportsListParams): Promise<ReportsListResponse> {
+  const response = await apiClient.get<ReportsListResponse>(
+    "/api/dashboard/reports/list",
+    {
+      params: {
+        cityId,
+        status,
+        search,
+        page,
+        limit,
+      },
+    },
+  );
+  return response.data;
+}
+
 export function useReportsList({
   cityId,
   status = "all",
@@ -45,23 +67,9 @@ export function useReportsList({
 }: UseReportsListParams) {
   return useQuery({
     queryKey: ["reports", "list", cityId, status, search, page, limit],
-    queryFn: async () => {
-      const response = await apiClient.get<ReportsListResponse>(
-        "/api/dashboard/reports/list",
-        {
-          params: {
-            cityId,
-            status,
-            search,
-            page,
-            limit,
-          },
-        },
-      );
-      return response.data;
-    },
+    queryFn: () => fetchReportsList({ cityId, status, search, page, limit }),
     enabled: Boolean(cityId),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 }
 

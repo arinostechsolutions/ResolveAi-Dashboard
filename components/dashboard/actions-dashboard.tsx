@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useCity } from "@/context/city-context";
 import { useReportStatusOptions } from "@/hooks/use-report-status-options";
-import { useReportsList } from "@/hooks/use-reports-list";
+import { useReportsList, type ReportsListResponse } from "@/hooks/use-reports-list";
 import { useUpdateReportStatus } from "@/hooks/use-update-report-status";
 import { formatStatusLabel } from "@/lib/utils";
 import { Loader2, Search, CheckCircle2, RefreshCcw } from "lucide-react";
@@ -57,15 +57,16 @@ export function ActionsDashboard() {
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      const results = reportsQuery.data?.results ?? [];
+      const data = reportsQuery.data as ReportsListResponse | undefined;
+      const list = data?.results ?? [];
       const map: Record<string, string> = {};
-      results.forEach((report) => {
+      list.forEach((report) => {
         map[report.id] = report.status;
       });
       setDraftStatuses(map);
     });
     return () => cancelAnimationFrame(id);
-  }, [reportsQuery.data?.results]);
+  }, [reportsQuery.data]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -182,7 +183,10 @@ export function ActionsDashboard() {
               Demandas recentes
             </h2>
             <p className="text-sm text-slate-400">
-              {`Exibindo ${reportsQuery.data?.results.length ?? 0} de ${reportsQuery.data?.total ?? 0} registros`}
+              {(() => {
+                const data = reportsQuery.data as ReportsListResponse | undefined;
+                return `Exibindo ${data?.results.length ?? 0} de ${data?.total ?? 0} registros`;
+              })()}
             </p>
           </div>
         </header>
@@ -192,7 +196,9 @@ export function ActionsDashboard() {
             <Loader2 className="size-5 animate-spin" />
             <span className="ml-2 text-sm">Carregando denúncias...</span>
           </div>
-        ) : reportsQuery.data && reportsQuery.data.results.length > 0 ? (
+        ) : (() => {
+          const data = reportsQuery.data as ReportsListResponse | undefined;
+          return data && data.results.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
               <thead className="bg-slate-900/70 text-xs uppercase tracking-wide text-slate-400">
@@ -204,7 +210,7 @@ export function ActionsDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
-                {reportsQuery.data.results.map((report) => (
+                {data.results.map((report) => (
                   <tr key={report.id} className="hover:bg-slate-900/60">
                     <td className="px-4 py-3">
                       <div className="flex flex-col">
@@ -252,12 +258,12 @@ export function ActionsDashboard() {
                         type="button"
                         onClick={() => handleUpdateStatus(report.id)}
                         disabled={
-                          mutation.isLoading &&
+                          mutation.isPending &&
                           mutation.variables?.reportId === report.id
                         }
                         className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-3 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        {mutation.isLoading &&
+                        {mutation.isPending &&
                         mutation.variables?.reportId === report.id ? (
                           <Loader2 className="size-3 animate-spin" />
                         ) : (
@@ -275,7 +281,8 @@ export function ActionsDashboard() {
           <div className="flex h-48 items-center justify-center text-sm text-slate-400">
             Nenhuma denúncia encontrada com os filtros selecionados.
           </div>
-        )}
+        );
+        })()}
       </section>
     </div>
   );

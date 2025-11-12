@@ -19,10 +19,7 @@ export function setAuthToken(token: string | null) {
 
 apiClient.interceptors.request.use((config) => {
   if (currentToken && !config.headers?.Authorization) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${currentToken}`,
-    };
+    config.headers.set("Authorization", `Bearer ${currentToken}`);
   }
   return config;
 });
