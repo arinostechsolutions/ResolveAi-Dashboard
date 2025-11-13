@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Calendar, RotateCcw } from "lucide-react";
+import { clsx } from "clsx";
 
 export type DashboardDateRange = {
   startDate?: string;
@@ -30,6 +31,16 @@ const QUICK_OPTIONS = [
 
 function formatDateToInput(date: Date) {
   return date.toISOString().split("T")[0];
+}
+
+function getQuickRangeDates(days: number) {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(end.getDate() - (days - 1));
+  return {
+    start: formatDateToInput(start),
+    end: formatDateToInput(end),
+  };
 }
 
 export function DashboardFilters({
@@ -61,18 +72,31 @@ export function DashboardFilters({
   };
 
   const handleQuickSelect = (days: number) => {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(end.getDate() - (days - 1));
-    const formattedStart = formatDateToInput(start);
-    const formattedEnd = formatDateToInput(end);
-    setStartDate(formattedStart);
-    setEndDate(formattedEnd);
+    const { start, end } = getQuickRangeDates(days);
+    setStartDate(start);
+    setEndDate(end);
     onApply({
-      startDate: formattedStart,
-      endDate: formattedEnd,
+      startDate: start,
+      endDate: end,
     });
   };
+
+  // Verificar qual intervalo rápido está ativo
+  const activeQuickOption = useMemo(() => {
+    if (!currentRange.startDate || !currentRange.endDate) {
+      return null;
+    }
+
+    // Comparar as datas atuais com cada opção rápida
+    for (const option of QUICK_OPTIONS) {
+      const { start, end } = getQuickRangeDates(option.value);
+      if (currentRange.startDate === start && currentRange.endDate === end) {
+        return option.value;
+      }
+    }
+
+    return null;
+  }, [currentRange.startDate, currentRange.endDate]);
 
   return (
     <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-3 py-4 shadow-lg shadow-slate-900/30 sm:px-4 sm:py-4 lg:px-6 overflow-x-hidden">
@@ -136,16 +160,24 @@ export function DashboardFilters({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {QUICK_OPTIONS.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => handleQuickSelect(option.value)}
-            className="rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-200 transition hover:border-emerald-400 hover:text-emerald-200"
-          >
-            {option.label}
-          </button>
-        ))}
+        {QUICK_OPTIONS.map((option) => {
+          const isActive = activeQuickOption === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => handleQuickSelect(option.value)}
+              className={clsx(
+                "rounded-lg border px-2.5 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-300"
+                  : "border-slate-700 bg-slate-900/80 text-slate-200 hover:border-emerald-400 hover:text-emerald-200",
+              )}
+            >
+              {option.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

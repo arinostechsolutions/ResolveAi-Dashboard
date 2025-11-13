@@ -89,6 +89,14 @@ export function ReportsDashboard() {
 
   return (
     <div className="flex flex-col gap-6 pb-12 overflow-x-hidden">
+      <header className="mb-2">
+        <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+          Relatórios
+        </h1>
+        <p className="mt-1 text-sm text-slate-400">
+          Visualize e exporte relatórios detalhados das irregularidades.
+        </p>
+      </header>
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 overflow-x-hidden">
         <SummaryCard
           title="Pendentes"
