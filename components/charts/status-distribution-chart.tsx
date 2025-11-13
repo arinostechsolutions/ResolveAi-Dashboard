@@ -44,14 +44,14 @@ export function StatusDistributionChart({
   return (
     <div
       ref={containerRef}
-      className="min-h-[320px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 px-6 pt-6 pb-12 shadow-lg shadow-slate-900/30"
+      className="min-h-[320px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 px-3 pt-4 pb-8 sm:px-6 sm:pt-6 sm:pb-12 shadow-lg shadow-slate-900/30"
     >
-      <header className="mb-6">
-        <h2 className="text-lg font-semibold text-white">
+      <header className="mb-4 sm:mb-6">
+        <h2 className="text-base font-semibold text-white sm:text-lg">
           Distribuição por status
         </h2>
-        <p className="text-sm text-slate-400">
-          Percentual de denúncias em cada etapa do fluxo operacional.
+        <p className="text-xs text-slate-400 sm:text-sm">
+          Percentual de irregularidades em cada etapa do fluxo operacional.
         </p>
       </header>
 

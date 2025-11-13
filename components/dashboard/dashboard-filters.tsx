@@ -75,13 +75,13 @@ export function DashboardFilters({
   };
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-4 py-4 shadow-lg shadow-slate-900/30 sm:px-6">
+    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-3 py-4 shadow-lg shadow-slate-900/30 sm:px-4 sm:py-4 lg:px-6 overflow-x-hidden">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/70 text-emerald-300">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/70 text-emerald-300">
             <Calendar className="size-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h2 className="text-sm font-semibold text-white">
               Intervalo de datas
             </h2>
@@ -91,26 +91,26 @@ export function DashboardFilters({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex gap-3">
-            <label className="flex flex-col text-xs text-slate-400">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <label className="flex flex-col text-xs text-slate-400 min-w-0">
               Início
               <input
                 type="date"
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
                 max={endDate || undefined}
-                className="mt-1 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
               />
             </label>
-            <label className="flex flex-col text-xs text-slate-400">
+            <label className="flex flex-col text-xs text-slate-400 min-w-0">
               Fim
               <input
                 type="date"
                 value={endDate}
                 onChange={(event) => setEndDate(event.target.value)}
                 min={startDate || undefined}
-                className="mt-1 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
               />
             </label>
           </div>

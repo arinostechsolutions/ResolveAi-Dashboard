@@ -15,23 +15,23 @@ type TopReportsTableProps = {
 
 export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
   return (
-    <section className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-slate-900/30">
-      <header className="flex items-center justify-between px-6 py-4">
-        <div>
-          <h2 className="text-lg font-semibold text-white">
-            Denúncias em destaque
+    <section className="rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-slate-900/30">
+      <header className="flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-white sm:text-lg">
+            Irregularidades em destaque
           </h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-xs text-slate-400 sm:text-sm">
             Casos com maior engajamento ou mais tempo aguardando resolução.
           </p>
         </div>
-        <TrendingUp className="size-5 text-emerald-400" />
+        <TrendingUp className="size-5 text-emerald-400 shrink-0 ml-2" />
       </header>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
+        <table className="min-w-[800px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
           <thead className="bg-slate-900/70 uppercase tracking-wide text-slate-400">
             <tr>
-              <th className="px-6 py-3 font-medium">Denúncia</th>
+              <th className="px-6 py-3 font-medium">Irregularidade</th>
               <th className="px-6 py-3 font-medium">Bairro</th>
               <th className="px-6 py-3 font-medium">Status</th>
               <th className="px-6 py-3 font-medium">Engajamento</th>
@@ -61,7 +61,7 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-4 text-xs text-slate-300">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300 sm:gap-4">
                     <span>Likes: {report.likesCount}</span>
                     <span>Views: {report.viewsCount}</span>
                     <span>Shares: {report.sharesCount}</span>
@@ -79,24 +79,26 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
                   })}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:text-emerald-200"
-                    onClick={() => onFollow?.(report)}
-                  >
-                    <Timer className="size-3" />
-                    Acompanhar
-                  </button>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      report.address,
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="ml-2 inline-flex items-center gap-1 text-xs text-sky-300 transition hover:text-sky-200"
-                  >
-                    Ver no mapa
-                    <ArrowUpRight className="size-3" />
-                  </a>
+                  <div className="flex flex-col gap-2 items-end sm:flex-row sm:items-center">
+                    <button
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:text-emerald-200 whitespace-nowrap"
+                      onClick={() => onFollow?.(report)}
+                    >
+                      <Timer className="size-3" />
+                      Acompanhar
+                    </button>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                        report.address,
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-sky-300 transition hover:text-sky-200 whitespace-nowrap"
+                    >
+                      Ver no mapa
+                      <ArrowUpRight className="size-3" />
+                    </a>
+                  </div>
                 </td>
               </tr>
             ))}

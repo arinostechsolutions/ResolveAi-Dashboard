@@ -13,7 +13,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "ResolveAI Dashboard",
-  description: "Monitoramento de denúncias e relatórios para prefeituras",
+  description: "Monitoramento de irregularidades e relatórios para prefeituras",
 };
 
 export default function RootLayout({

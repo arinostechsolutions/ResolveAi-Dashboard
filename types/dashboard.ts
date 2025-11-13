@@ -41,7 +41,10 @@ export type ReportsSummaryResponse = {
 export type TopReportsResponse = {
   cityId: string;
   sortBy: string;
+  page: number;
   limit: number;
+  total: number;
+  totalPages: number;
   results: Array<{
     id: string;
     reportType: string;
