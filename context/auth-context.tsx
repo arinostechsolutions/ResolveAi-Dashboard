@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { setAuthToken } from "@/lib/api-client";
+import { setAuthToken, setLogoutCallback } from "@/lib/api-client";
 
 type AdminPayload = {
   userId: string;
@@ -76,6 +76,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthToken(token ?? null);
   }, [isBrowser, token]);
 
+  const logout = useCallback(() => {
+    setToken(null);
+    setAdmin(null);
+    setAuthToken(null);
+    Cookies.remove(TOKEN_COOKIE_KEY);
+    localStorage.removeItem(ADMIN_STORAGE_KEY);
+  }, []);
+
+  useEffect(() => {
+    if (!isBrowser) return;
+    
+    // Registrar função de logout no api-client para ser chamada em caso de 401
+    setLogoutCallback(logout);
+    
+    // Limpar callback quando componente desmontar
+    return () => {
+      setLogoutCallback(null);
+    };
+  }, [isBrowser, logout]);
+
   const login = (newToken: string, adminData: AdminPayload, remember = true) => {
     setToken(newToken);
     setAdmin(adminData);
@@ -87,14 +107,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     Cookies.set(TOKEN_COOKIE_KEY, newToken, cookieOptions);
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(adminData));
-  };
-
-  const logout = () => {
-    setToken(null);
-    setAdmin(null);
-    setAuthToken(null);
-    Cookies.remove(TOKEN_COOKIE_KEY);
-    localStorage.removeItem(ADMIN_STORAGE_KEY);
   };
 
   const value = useMemo<AuthContextValue>(

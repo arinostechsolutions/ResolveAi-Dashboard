@@ -10,7 +10,7 @@ import { formatStatusLabel } from "@/lib/utils";
 
 export function MapDashboard() {
   const { cityId } = useCity();
-  const [status, setStatus] = useState<string>("pendente");
+  const [status, setStatus] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("");
 
   const statusOptionsQuery = useReportStatusOptions(cityId);
@@ -30,23 +30,23 @@ export function MapDashboard() {
   const data = map.data;
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-slate-900/30">
+    <div className="flex flex-col gap-6 pb-12 overflow-x-hidden">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6 overflow-x-hidden">
         <header className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-white">
+          <div className="min-w-0">
+            <h1 className="text-xl font-semibold text-white sm:text-2xl">
               Mapa estratégico
             </h1>
-            <p className="text-sm text-slate-400">
+            <p className="text-xs text-slate-400 sm:text-sm">
               Use os filtros para focar em regiões ou categorias prioritárias.
             </p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0 w-full sm:w-auto">
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setStatus("all")}
                 className={clsx(
-                  "rounded-full px-4 py-2 text-xs font-medium uppercase tracking-wide transition",
+                  "rounded-full px-3 py-2 text-xs font-medium uppercase tracking-wide transition sm:px-4",
                   status === "all"
                     ? "bg-emerald-500 text-emerald-950 shadow-lg shadow-emerald-500/30"
                     : "border border-slate-700 bg-transparent text-slate-300 hover:border-emerald-400 hover:text-emerald-200",
@@ -59,7 +59,7 @@ export function MapDashboard() {
                   key={filter}
                   onClick={() => setStatus(filter)}
                   className={clsx(
-                    "rounded-full px-4 py-2 text-xs font-medium uppercase tracking-wide transition",
+                    "rounded-full px-3 py-2 text-xs font-medium uppercase tracking-wide transition sm:px-4",
                     status === filter
                       ? "bg-emerald-500 text-emerald-950 shadow-lg shadow-emerald-500/30"
                       : "border border-slate-700 bg-transparent text-slate-300 hover:border-emerald-400 hover:text-emerald-200",
@@ -74,12 +74,12 @@ export function MapDashboard() {
               placeholder="Filtrar por tipo (ex: Iluminação)"
               value={reportType}
               onChange={(event) => setReportType(event.target.value)}
-              className="h-10 rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-slate-100 outline-none ring-emerald-400 placeholder:text-slate-500 focus:ring-2"
+              className="h-10 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-slate-100 outline-none ring-emerald-400 placeholder:text-slate-500 focus:ring-2 min-w-0"
             />
           </div>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
             <p className="text-xs uppercase tracking-wide text-slate-400">
               Total exibido
@@ -96,7 +96,7 @@ export function MapDashboard() {
               {status === "all" ? "Todos" : formatStatusLabel(status)}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 md:col-span-2">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
             <p className="text-xs uppercase tracking-wide text-slate-400">
               Tipo
             </p>

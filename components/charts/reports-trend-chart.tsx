@@ -48,15 +48,15 @@ export function ReportsTrendChart({ timeline }: ReportsTrendChartProps) {
   return (
     <div
       ref={containerRef}
-      className="min-h-[320px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 px-6 pt-6 pb-12 shadow-lg shadow-slate-900/30"
+      className="min-h-[320px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 px-3 pt-4 pb-8 sm:px-6 sm:pt-6 sm:pb-12 shadow-lg shadow-slate-900/30"
     >
-      <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-white">
-            Evolução de denuncias
+      <header className="mb-4 flex items-center justify-between sm:mb-6">
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-white sm:text-lg">
+            Evolução de irregularidades
           </h2>
-          <p className="text-sm text-slate-400">
-            Total diário de denúncias registradas na plataforma ResolveAI.
+          <p className="text-xs text-slate-400 sm:text-sm">
+            Total diário de irregularidades registradas na plataforma ResolveAI.
           </p>
         </div>
       </header>

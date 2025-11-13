@@ -117,12 +117,12 @@ export function ReportsMap({ data, cityId }: ReportsMapProps) {
 
   return (
     <section className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-slate-900/30">
-      <header className="flex items-center justify-between px-6 py-4">
-        <div>
-          <h2 className="text-lg font-semibold text-white">
+      <header className="flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-white sm:text-lg">
             Distribuição geográfica ({data.total})
           </h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-xs text-slate-400 sm:text-sm">
             Visualize onde estão concentradas as demandas da população.
           </p>
         </div>

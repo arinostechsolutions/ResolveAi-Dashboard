@@ -50,15 +50,23 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   return (
     <CityProvider key={cityKey} initialCity={initialCity}>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-screen w-full overflow-x-hidden">
         <div className="hidden lg:flex lg:w-64 xl:w-72">
           <Sidebar />
         </div>
-        <div className="flex min-h-screen flex-1 flex-col bg-slate-950">
+        <div className="flex min-h-screen flex-1 flex-col bg-slate-950 overflow-x-hidden">
           <Topbar citySelect={<CitySelect />} />
-          <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+          <main className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 lg:px-8 max-w-full">
             {children}
           </main>
+          <footer className="border-t border-slate-800 bg-slate-900/60 px-3 py-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center">
+              <p className="text-xs text-slate-400">
+                Desenvolvido por{" "}
+                <span className="font-semibold text-emerald-400">ArinoTech Solutions</span>
+              </p>
+            </div>
+          </footer>
         </div>
       </div>
     </CityProvider>
