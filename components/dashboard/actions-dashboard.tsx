@@ -129,15 +129,15 @@ export function ActionsDashboard() {
 
   return (
     <div className="flex min-h-full flex-col gap-6 pb-12 overflow-x-hidden">
+      <header className="mb-2">
+        <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+          Ações
+        </h1>
+        <p className="mt-1 text-sm text-slate-400">
+          Atualize o status das ocorrências e acompanhe o processamento das demandas da cidade.
+        </p>
+      </header>
       <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6 overflow-x-hidden">
-        <header className="mb-6 space-y-2">
-          <h1 className="text-xl font-semibold text-white sm:text-2xl">
-            Ações e acompanhamento
-          </h1>
-          <p className="text-xs text-slate-400 sm:text-sm">
-            Atualize o status das ocorrências e acompanhe o processamento das demandas da cidade.
-          </p>
-        </header>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-2">

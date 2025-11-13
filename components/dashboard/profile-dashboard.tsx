@@ -27,6 +27,14 @@ export function ProfileDashboard() {
 
   return (
     <div className="flex flex-col gap-6 pb-12">
+      <header className="mb-2">
+        <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+          Perfil
+        </h1>
+        <p className="mt-1 text-sm text-slate-400">
+          Visualize e gerencie as informações da sua conta administrativa.
+        </p>
+      </header>
       <section className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-slate-900/30">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
