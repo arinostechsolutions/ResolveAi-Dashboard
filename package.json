@@ -7,7 +7,8 @@
     "dev:local": "cross-env NEXT_PUBLIC_API_BASE_URL=http://localhost:3000 next dev --port 4000",
     "dev:railway": "cross-env NEXT_PUBLIC_API_BASE_URL=https://arrumaai-backend.up.railway.app next dev --port 4000",
     "build": "next build",
-    "start": "next start --port 4000",
+    "start": "node server.js",
+    "start:next": "next start --port 4000",
     "lint": "eslint"
   },
   "dependencies": {
