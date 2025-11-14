@@ -35,10 +35,10 @@ export function MapDashboard() {
   return (
     <div className="flex flex-col gap-6 pb-12">
       <header className="mb-2">
-        <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white">
           Mapa Estratégico
         </h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="mt-1 text-xs sm:text-sm text-slate-400">
           Visualize a distribuição geográfica das irregularidades e use os filtros para focar em regiões ou categorias prioritárias.
         </p>
       </header>
@@ -82,7 +82,7 @@ export function MapDashboard() {
           </div>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
             <p className="text-xs uppercase tracking-wide text-slate-400">
               Total exibido
@@ -110,7 +110,7 @@ export function MapDashboard() {
         </div>
       </section>
 
-      <div className="h-[30rem] w-full lg:h-[34rem]">
+      <div className="h-[20rem] sm:h-[30rem] w-full lg:h-[34rem]">
         <ReportsMap data={data} cityId={cityId} />
       </div>
     </div>

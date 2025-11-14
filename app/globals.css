@@ -39,3 +39,42 @@ a {
   object-fit: cover;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
 }
+
+/* Estilos para popup no mobile */
+@media (max-width: 640px) {
+  .leaflet-popup {
+    max-width: 90vw !important;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    max-width: 90vw !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .leaflet-popup-content {
+    margin: 0 !important;
+    width: 100% !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+  }
+  
+  .leaflet-popup-close-button {
+    font-size: 24px !important;
+    width: 32px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    padding: 0 !important;
+    z-index: 10 !important;
+    color: #f8fafc !important;
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    border-radius: 0.5rem !important;
+    right: 4px !important;
+    top: 4px !important;
+  }
+  
+  .leaflet-popup-close-button:hover {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+  }
+}

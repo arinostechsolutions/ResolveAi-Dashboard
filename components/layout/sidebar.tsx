@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
-import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
+import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp, LogOut } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useState, useCallback } from "react";
 import { useAuth } from "@/context/auth-context";
@@ -47,12 +47,20 @@ export function Sidebar() {
     Icon: iconComponents[item.icon as keyof typeof iconComponents] ?? LayoutDashboard,
   }));
 
+  const { logout } = useAuth();
+
   const handleNavClick = useCallback((href: string) => {
     setIsOpen(false);
     if (pathname !== href) {
       router.push(href);
     }
   }, [pathname, router]);
+
+  const handleLogout = useCallback(() => {
+    logout();
+    setIsOpen(false);
+    router.push("/login");
+  }, [logout, router]);
 
   return (
     <aside className={clsx(
@@ -97,48 +105,67 @@ export function Sidebar() {
           isOpen ? "block" : "hidden lg:flex",
         )}
       >
-        {navItemsWithIcons.map(({ title, href, Icon }) => {
-          const isActive =
-            pathname === href ||
-            (href !== "/" && pathname.startsWith(href));
-          
-          const showBadge = href === "/observations" && unreadCount > 0;
+        <div className="flex-1">
+          {navItemsWithIcons.map(({ title, href, Icon }) => {
+            const isActive =
+              pathname === href ||
+              (href !== "/" && pathname.startsWith(href));
+            
+            const showBadge = href === "/observations" && unreadCount > 0;
 
-          return (
-            <button
-              key={href}
-              type="button"
-              onClick={() => handleNavClick(href)}
-              className={clsx(
-                "w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors text-left relative",
-                "hover:bg-slate-800 hover:text-white",
-                isActive
-                  ? "bg-gradient-to-r from-emerald-500/90 to-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20"
-                  : "text-slate-300",
-                isCollapsed && "justify-center px-2"
-              )}
-              title={isCollapsed ? title : undefined}
-            >
-              <div className={clsx(
-                "flex items-center gap-3",
-                isCollapsed && "gap-0"
-              )}>
-                <Icon className="size-5 shrink-0" />
-                {!isCollapsed && <span>{title}</span>}
-              </div>
-              {showBadge && !isCollapsed && (
-                <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-emerald-500 text-xs font-semibold text-emerald-950">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              )}
-              {showBadge && isCollapsed && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-emerald-500 text-[10px] font-semibold text-emerald-950">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={href}
+                type="button"
+                onClick={() => handleNavClick(href)}
+                className={clsx(
+                  "w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors text-left relative",
+                  "hover:bg-slate-800 hover:text-white",
+                  isActive
+                    ? "bg-gradient-to-r from-emerald-500/90 to-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20"
+                    : "text-slate-300",
+                  isCollapsed && "justify-center px-2"
+                )}
+                title={isCollapsed ? title : undefined}
+              >
+                <div className={clsx(
+                  "flex items-center gap-3",
+                  isCollapsed && "gap-0"
+                )}>
+                  <Icon className="size-5 shrink-0" />
+                  {!isCollapsed && <span>{title}</span>}
+                </div>
+                {showBadge && !isCollapsed && (
+                  <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-emerald-500 text-xs font-semibold text-emerald-950">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+                {showBadge && isCollapsed && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-emerald-500 text-[10px] font-semibold text-emerald-950">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Botão de Logout */}
+        <div className="mt-auto pt-2 border-t border-slate-800">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={clsx(
+              "w-full flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors text-left",
+              "hover:bg-red-500/10 hover:text-red-300 text-slate-300",
+              isCollapsed && "justify-center px-2"
+            )}
+            title={isCollapsed ? "Sair" : undefined}
+          >
+            <LogOut className="size-5 shrink-0" />
+            {!isCollapsed && <span>Sair</span>}
+          </button>
+        </div>
       </nav>
     </aside>
   );

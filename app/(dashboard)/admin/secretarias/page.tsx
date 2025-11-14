@@ -87,22 +87,24 @@ export default function SecretariasPage() {
   return (
     <div className="flex flex-col gap-6 pb-12">
       <header className="mb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-white sm:text-3xl">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white">
               Gerenciamento de Secretarias
             </h1>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-xs sm:text-sm text-slate-400">
               Configure secretarias e crie administradores para cada uma delas.
             </p>
           </div>
-          <CitySelect />
+          <div className="shrink-0">
+            <CitySelect />
+          </div>
         </div>
       </header>
 
       {/* Tabs */}
       {cityId && (
-        <div className="flex gap-2 border-b border-slate-800">
+        <div className="flex gap-1 sm:gap-2 border-b border-slate-800 overflow-x-auto">
           <button
             onClick={() => {
               setShowAdmins(false);
@@ -111,7 +113,7 @@ export default function SecretariasPage() {
               setCreatingAdminFor(null);
               setEditingAdmin(null);
             }}
-            className={`px-4 py-2 text-sm font-medium transition ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition whitespace-nowrap ${
               !showAdmins && !showHistory
                 ? "border-b-2 border-emerald-500 text-emerald-300"
                 : "text-slate-400 hover:text-slate-300"
@@ -127,7 +129,7 @@ export default function SecretariasPage() {
               setCreatingAdminFor(null);
               setEditingAdmin(null);
             }}
-            className={`px-4 py-2 text-sm font-medium transition ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition whitespace-nowrap ${
               showAdmins && !showHistory
                 ? "border-b-2 border-emerald-500 text-emerald-300"
                 : "text-slate-400 hover:text-slate-300"
@@ -143,7 +145,7 @@ export default function SecretariasPage() {
               setCreatingAdminFor(null);
               setEditingAdmin(null);
             }}
-            className={`px-4 py-2 text-sm font-medium transition ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition whitespace-nowrap ${
               showHistory
                 ? "border-b-2 border-emerald-500 text-emerald-300"
                 : "text-slate-400 hover:text-slate-300"
@@ -175,7 +177,7 @@ export default function SecretariasPage() {
               onApply={setHistoryDateRange} 
             />
           </div>
-          <div className="mb-4 flex flex-wrap items-center gap-2">
+          <div className="mb-4 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2">
             {isMayor && secretariasData?.secretarias && (
               <select
                 value={selectedSecretariaId || ""}
@@ -186,7 +188,7 @@ export default function SecretariasPage() {
                   // para evitar mostrar um admin que não pertence à nova secretaria
                   setSelectedAdminId(undefined);
                 }}
-                className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+                className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400"
               >
                 <option value="">Todas as secretarias</option>
                 {secretariasData.secretarias.map((secretaria) => (
@@ -199,7 +201,7 @@ export default function SecretariasPage() {
             <select
               value={selectedAdminId || ""}
               onChange={(e) => setSelectedAdminId(e.target.value || undefined)}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             >
               <option value="">Todos os administradores</option>
               {filteredAdmins.map((admin) => (
@@ -211,7 +213,7 @@ export default function SecretariasPage() {
             <select
               value={selectedActionType || ""}
               onChange={(e) => setSelectedActionType(e.target.value || undefined)}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             >
               <option value="">Todas as ações</option>
               <option value="login">Login</option>

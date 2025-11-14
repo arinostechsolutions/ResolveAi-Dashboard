@@ -116,7 +116,7 @@ export function ReportsDashboard() {
           Visualize e exporte relatórios detalhados das irregularidades.
         </p>
       </header>
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           title="Pendentes"
           value={
@@ -159,7 +159,7 @@ export function ReportsDashboard() {
         />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      <section className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">

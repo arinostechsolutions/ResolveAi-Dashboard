@@ -140,9 +140,9 @@ export function ActionsDashboard() {
           Atualize o status das ocorrências e acompanhe o processamento das demandas da cidade.
         </p>
       </header>
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-3 shadow-lg shadow-slate-900/30 sm:p-4 lg:p-6">
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-2">
             <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
               Filtrar por status
@@ -194,7 +194,7 @@ export function ActionsDashboard() {
             </select>
           </div>
 
-          <div className="flex items-end justify-end">
+          <div className="flex items-end justify-end sm:col-span-2 lg:col-span-1">
             <button
               type="button"
               onClick={() => {
@@ -204,10 +204,11 @@ export function ActionsDashboard() {
                 setItemsPerPage(2);
                 router.replace("/actions");
               }}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-200 transition hover:border-emerald-400 hover:text-emerald-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 px-3 sm:px-4 py-2 text-xs sm:text-sm text-slate-200 transition hover:border-emerald-400 hover:text-emerald-200"
             >
-              <RefreshCcw className="size-4" />
-              Resetar filtros
+              <RefreshCcw className="size-3 sm:size-4" />
+              <span className="hidden sm:inline">Resetar filtros</span>
+              <span className="sm:hidden">Resetar</span>
             </button>
           </div>
         </div>
@@ -239,8 +240,68 @@ export function ActionsDashboard() {
         ) : (() => {
           const data = reportsQuery.data as ReportsListResponse | undefined;
           return data && data.results.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-[640px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
+          <>
+            {/* Versão Mobile - Cards */}
+            <div className="block md:hidden space-y-3">
+              {data.results.map((report) => {
+                const currentStatus = draftStatuses[report.id] ?? report.status;
+                return (
+                  <div
+                    key={report.id}
+                    className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3"
+                  >
+                    <div>
+                      <h3 className="font-medium text-white text-sm mb-1">{report.reportType}</h3>
+                      <p className="text-xs text-slate-400">{report.address}</p>
+                      {report.referencia && (
+                        <p className="text-xs text-slate-500 mt-1">Ref: {report.referencia}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {report.bairro && (
+                        <span className="text-xs text-slate-300">📍 {report.bairro}</span>
+                      )}
+                      <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-300">
+                        {formatStatusLabel(report.status)}
+                      </span>
+                    </div>
+                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                      <label className="text-xs font-medium text-slate-400">
+                        Atualizar Status
+                      </label>
+                      <div className="flex gap-2">
+                        <select
+                          value={currentStatus}
+                          onChange={(e) => handleChangeStatus(report.id, e.target.value)}
+                          className="flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none transition focus:border-emerald-400"
+                        >
+                          {availableStatuses.map((status) => (
+                            <option key={status} value={status}>
+                              {formatStatusLabel(status)}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => handleUpdateStatus(report.id)}
+                          disabled={mutation.isPending || currentStatus === report.status}
+                          className="rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                        >
+                          {mutation.isPending ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="size-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Versão Desktop - Tabela */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="min-w-[640px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
               <thead className="bg-slate-900/70 text-xs uppercase tracking-wide text-slate-400">
                 <tr>
                   <th className="px-4 py-3 font-medium">Irregularidade</th>
@@ -315,9 +376,10 @@ export function ActionsDashboard() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-        ) : (
+              </table>
+            </div>
+          </>
+          ) : (
           <div className="flex h-48 items-center justify-center text-sm text-slate-400">
             Nenhuma irregularidade encontrada com os filtros selecionados.
           </div>

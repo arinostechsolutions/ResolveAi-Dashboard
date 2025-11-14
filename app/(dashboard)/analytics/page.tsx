@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
 
       <DashboardFilters currentRange={dateRange} onApply={setDateRange} />
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      <section className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         <NeighborhoodChart
           data={neighborhoodData.data?.results || []}
           isLoading={neighborhoodData.isLoading}
@@ -111,14 +111,14 @@ export default function AnalyticsPage() {
       </section>
 
       <section>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-lg font-semibold text-white">Tendências Temporais</h2>
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <h2 className="text-base sm:text-lg font-semibold text-white">Tendências Temporais</h2>
           <div className="flex flex-wrap items-center gap-2">
-            <label className="text-sm text-slate-400">Bairro:</label>
+            <label className="text-xs sm:text-sm text-slate-400">Bairro:</label>
             <select
               value={trendBairro}
               onChange={(e) => setTrendBairro(e.target.value)}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-2 sm:px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400 min-w-[120px] sm:min-w-0"
             >
               <option value="">Todos os bairros</option>
               {bairrosList.map((bairro) => (
@@ -127,11 +127,11 @@ export default function AnalyticsPage() {
                 </option>
               ))}
             </select>
-            <label className="text-sm text-slate-400">Tipo:</label>
+            <label className="text-xs sm:text-sm text-slate-400">Tipo:</label>
             <select
               value={trendReportType}
               onChange={(e) => setTrendReportType(e.target.value)}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-2 sm:px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400 min-w-[120px] sm:min-w-0"
             >
               <option value="">Todos os tipos</option>
               {reportTypesList.map((rt) => (
@@ -140,11 +140,11 @@ export default function AnalyticsPage() {
                 </option>
               ))}
             </select>
-            <label className="text-sm text-slate-400">Agrupar por:</label>
+            <label className="text-xs sm:text-sm text-slate-400">Agrupar:</label>
             <select
               value={trendGroupBy}
               onChange={(e) => setTrendGroupBy(e.target.value as "day" | "week" | "month")}
-              className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-2 sm:px-3 py-1.5 text-xs sm:text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             >
               <option value="day">Dia</option>
               <option value="week">Semana</option>
@@ -161,10 +161,10 @@ export default function AnalyticsPage() {
       </section>
 
       <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Comparação de Engajamento</h2>
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h2 className="text-base sm:text-lg font-semibold text-white">Comparação de Engajamento</h2>
           <div className="flex items-center gap-2">
-            <label className="text-sm text-slate-400">Comparar por:</label>
+            <label className="text-xs sm:text-sm text-slate-400">Comparar:</label>
             <select
               value={compareBy}
               onChange={(e) => setCompareBy(e.target.value as "neighborhood" | "type")}

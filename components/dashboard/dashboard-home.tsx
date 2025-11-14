@@ -99,7 +99,7 @@ export function DashboardHome() {
         </p>
       </header>
       <DashboardFilters currentRange={dateRange} onApply={setDateRange} />
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           title="Irregularidades totais"
           value={
@@ -160,7 +160,7 @@ export function DashboardHome() {
         />
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-5">
+      <section className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-5">
         <div className="lg:col-span-3">
           {summary.isLoading || !summary.data ? (
             <div className="flex h-72 items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
@@ -181,9 +181,9 @@ export function DashboardHome() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      <section className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-3">
         <div className="xl:col-span-2">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-3 sm:mb-4 flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 Itens por página:
@@ -300,11 +300,11 @@ export function DashboardHome() {
             )}
           </div>
         </div>
-        <div className="xl:col-span-1 h-full">
-          <div className="h-[26rem] w-full xl:h-[30rem]">
-            <ReportsMap data={map.data} cityId={cityId} />
-          </div>
-        </div>
+              <div className="xl:col-span-1 h-full">
+                <div className="h-[20rem] sm:h-[26rem] w-full xl:h-[30rem]">
+                  <ReportsMap data={map.data} cityId={cityId} />
+                </div>
+              </div>
       </section>
     </div>
   );

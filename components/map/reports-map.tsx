@@ -145,13 +145,16 @@ export function ReportsMap({ data, cityId }: ReportsMapProps) {
               position={[report.location.lat, report.location.lng]}
               icon={icon ?? undefined}
             >
-              <Popup>
-                <article className="space-y-2 text-sm text-slate-100 rounded-2xl border border-slate-800 bg-slate-950/90 p-4 backdrop-blur">
+              <Popup
+                maxWidth={400}
+                className="mobile-popup"
+              >
+                <article className="space-y-2 text-xs sm:text-sm text-slate-100 rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-950/90 p-3 sm:p-4 backdrop-blur max-h-[70vh] sm:max-h-none overflow-y-auto">
                   <header className="space-y-1">
-                    <strong className="block text-base font-semibold text-white">
+                    <strong className="block text-sm sm:text-base font-semibold text-white">
                       {report.reportType}
                     </strong>
-                    <p>{report.address}</p>
+                    <p className="text-xs sm:text-sm">{report.address}</p>
                     <p className="text-xs text-slate-400">
                       Status: {report.status}
                     </p>
@@ -162,15 +165,15 @@ export function ReportsMap({ data, cityId }: ReportsMapProps) {
                       href={report.imageUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="group block overflow-hidden rounded-xl border border-slate-800 bg-black"
+                      className="group block overflow-hidden rounded-lg sm:rounded-xl border border-slate-800 bg-black"
                     >
                       <img
                         src={report.imageUrl}
                         alt={report.reportType}
-                        className="max-h-64 w-full object-contain transition duration-200 group-hover:scale-[1.02]"
+                        className="max-h-32 sm:max-h-64 w-full object-contain transition duration-200 group-hover:scale-[1.02]"
                         loading="lazy"
                       />
-                      <span className="mt-1 block text-center text-xs text-emerald-300 group-hover:text-emerald-200">
+                      <span className="mt-1 block text-center text-[10px] sm:text-xs text-emerald-300 group-hover:text-emerald-200">
                         Abrir foto em nova aba
                       </span>
                     </a>

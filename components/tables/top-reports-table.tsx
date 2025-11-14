@@ -25,7 +25,64 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
           </p>
         </div>
       </header>
-      <div className="overflow-x-auto">
+      
+      {/* Versão Mobile - Cards */}
+      <div className="block md:hidden space-y-3 px-3 pb-4">
+        {data.map((report) => (
+          <div
+            key={report.id}
+            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3"
+          >
+            <div>
+              <h3 className="font-medium text-white text-sm mb-1">{report.reportType}</h3>
+              <p className="text-xs text-slate-400">{report.address}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {report.bairro && (
+                <span className="text-slate-300">📍 {report.bairro}</span>
+              )}
+              <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-300">
+                {formatStatusLabel(report.status)}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300">
+              <span>❤️ {report.likesCount}</span>
+              <span>👁️ {report.viewsCount}</span>
+              <span>📤 {report.sharesCount}</span>
+              <span className="text-slate-400">
+                {new Date(report.createdAt).toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+            <div className="flex flex-col gap-2 pt-2 border-t border-slate-800">
+              <button
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-slate-700 px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:text-emerald-200"
+                onClick={() => onFollow?.(report)}
+              >
+                <Timer className="size-3" />
+                Acompanhar
+              </button>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  report.address,
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full inline-flex items-center justify-center gap-1 text-xs text-sky-300 transition hover:text-sky-200"
+              >
+                Ver no mapa
+                <ArrowUpRight className="size-3" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Versão Desktop - Tabela */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="min-w-[800px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
           <thead className="bg-slate-900/70 uppercase tracking-wide text-slate-400">
             <tr>

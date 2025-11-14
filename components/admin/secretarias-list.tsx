@@ -70,13 +70,13 @@ export function SecretariasList({
           key={secretaria.id}
           className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6"
         >
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold text-white">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base sm:text-lg font-semibold text-white truncate">
                   {secretaria.label}
                 </h3>
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-300">
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-300 shrink-0">
                   Secretaria
                 </span>
               </div>
@@ -97,17 +97,18 @@ export function SecretariasList({
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => onCreateAdmin(secretaria)}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/20"
+                className="inline-flex items-center gap-1 sm:gap-2 rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-2 sm:px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/20"
               >
                 <Plus className="size-3" />
-                Criar Admin
+                <span className="hidden sm:inline">Criar Admin</span>
+                <span className="sm:hidden">Admin</span>
               </button>
               <button
                 onClick={() => onEdit(secretaria)}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/50 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-600 hover:bg-slate-800"
+                className="inline-flex items-center gap-1 sm:gap-2 rounded-xl border border-slate-700 bg-slate-800/50 px-2 sm:px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-600 hover:bg-slate-800"
               >
                 <Pencil className="size-3" />
                 Editar
@@ -115,7 +116,7 @@ export function SecretariasList({
               <button
                 onClick={() => handleDelete(secretaria)}
                 disabled={deletingId === secretaria.id}
-                className="inline-flex items-center gap-2 rounded-xl border border-red-500/50 bg-red-500/10 px-3 py-2 text-xs font-medium text-red-300 transition hover:border-red-400 hover:bg-red-500/20 disabled:opacity-50"
+                className="inline-flex items-center gap-1 sm:gap-2 rounded-xl border border-red-500/50 bg-red-500/10 px-2 sm:px-3 py-2 text-xs font-medium text-red-300 transition hover:border-red-400 hover:bg-red-500/20 disabled:opacity-50"
               >
                 <Trash2 className="size-3" />
                 {deletingId === secretaria.id ? "Deletando..." : "Deletar"}

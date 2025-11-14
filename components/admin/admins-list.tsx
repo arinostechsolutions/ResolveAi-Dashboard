@@ -54,10 +54,10 @@ export function AdminsList({ admins, secretarias, onEdit }: AdminsListProps) {
           key={admin.userId}
           className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6"
         >
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold text-white">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base sm:text-lg font-semibold text-white truncate">
                   {admin.name}
                 </h3>
                 {admin.isMayor && (
@@ -104,10 +104,10 @@ export function AdminsList({ admins, secretarias, onEdit }: AdminsListProps) {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => onEdit(admin)}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/50 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-600 hover:bg-slate-800"
+                className="inline-flex items-center gap-1 sm:gap-2 rounded-xl border border-slate-700 bg-slate-800/50 px-2 sm:px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-600 hover:bg-slate-800"
               >
                 <Pencil className="size-3" />
                 Editar
@@ -116,7 +116,7 @@ export function AdminsList({ admins, secretarias, onEdit }: AdminsListProps) {
                 <button
                   onClick={() => handleDelete(admin)}
                   disabled={deletingId === admin.userId}
-                  className="inline-flex items-center gap-2 rounded-xl border border-red-500/50 bg-red-500/10 px-3 py-2 text-xs font-medium text-red-300 transition hover:border-red-400 hover:bg-red-500/20 disabled:opacity-50"
+                  className="inline-flex items-center gap-1 sm:gap-2 rounded-xl border border-red-500/50 bg-red-500/10 px-2 sm:px-3 py-2 text-xs font-medium text-red-300 transition hover:border-red-400 hover:bg-red-500/20 disabled:opacity-50"
                 >
                   <Trash2 className="size-3" />
                   {deletingId === admin.userId ? "Deletando..." : "Deletar"}

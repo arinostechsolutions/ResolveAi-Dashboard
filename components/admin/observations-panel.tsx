@@ -61,18 +61,18 @@ export function ObservationsPanel({ secretariaId }: ObservationsPanelProps) {
   }
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="size-5 text-emerald-300" />
-          <h2 className="text-lg font-semibold text-white">
+    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2 min-w-0">
+          <MessageSquare className="size-4 sm:size-5 text-emerald-300 shrink-0" />
+          <h2 className="text-base sm:text-lg font-semibold text-white truncate">
             {isMayor ? "Observações para Secretarias" : "Observações Recebidas"}
           </h2>
         </div>
         {isMayor && (
           <button
             onClick={() => setShowForm(!showForm)}
-            className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
+            className="w-full sm:w-auto rounded-xl bg-emerald-500 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
           >
             {showForm ? "Cancelar" : "Nova Observação"}
           </button>
@@ -80,7 +80,7 @@ export function ObservationsPanel({ secretariaId }: ObservationsPanelProps) {
       </div>
 
       {isMayor && showForm && (
-        <form onSubmit={handleSubmit} className="mb-6 space-y-4 rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+        <form onSubmit={handleSubmit} className="mb-4 sm:mb-6 space-y-3 sm:space-y-4 rounded-2xl border border-slate-800 bg-slate-950/50 p-3 sm:p-4">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-300">
               Secretaria
