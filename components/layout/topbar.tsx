@@ -1,10 +1,11 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { Menu, X, UserCircle2, LayoutDashboard, BarChart3, Map, ClipboardCheck, User } from "lucide-react";
+import { Menu, X, UserCircle2, LayoutDashboard, BarChart3, Map, ClipboardCheck, User, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
+import { SecretariaSelect } from "../selects/secretaria-select";
 import { NAV_ITEMS } from "@/lib/constants";
 import { clsx } from "clsx";
 
@@ -18,6 +19,7 @@ const iconComponents = {
   Map,
   User,
   ClipboardCheck,
+  MessageSquare,
 };
 
 export function Topbar({ citySelect }: TopbarProps) {
@@ -52,6 +54,7 @@ export function Topbar({ citySelect }: TopbarProps) {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0">
           {citySelect}
+          <SecretariaSelect />
           <Link
             href="/profile"
             className="inline-flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 transition hover:border-emerald-400 hover:text-emerald-200"
@@ -60,7 +63,7 @@ export function Topbar({ citySelect }: TopbarProps) {
             <div className="flex flex-col leading-tight">
               <span className="font-medium">{admin?.name ?? "Administrador"}</span>
               <span className="text-xs text-slate-400">
-                {admin?.isSuperAdmin ? "Super Admin" : "Prefeituras"}
+                {admin?.isSuperAdmin ? "Super Admin" : admin?.isMayor ? "Prefeito" : "Administrador"}
               </span>
             </div>
           </Link>

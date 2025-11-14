@@ -12,6 +12,8 @@ type AdminPayload = {
   cpf?: string;
   allowedCities?: string[];
   isSuperAdmin?: boolean;
+  isMayor?: boolean;
+  secretaria?: string | null;
   lastLoginAt?: string;
 };
 
@@ -20,6 +22,7 @@ type AuthContextValue = {
   token: string | null;
   loading: boolean;
   login: (token: string, admin: AdminPayload, remember?: boolean) => void;
+  updateAdmin: (adminData: Partial<AdminPayload>) => void;
   logout: () => void;
 };
 
@@ -60,6 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           cpf: decoded.cpf,
           allowedCities: decoded.allowedCities ?? [],
           isSuperAdmin: decoded.isSuperAdmin ?? false,
+          isMayor: decoded.isMayor ?? false,
+          secretaria: decoded.secretaria ?? null,
           lastLoginAt: decoded.lastLoginAt,
         };
       } catch (error) {
@@ -109,15 +114,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(adminData));
   };
 
+  const updateAdmin = useCallback((adminData: Partial<AdminPayload>) => {
+    if (!admin) return;
+    const updatedAdmin = { ...admin, ...adminData };
+    setAdmin(updatedAdmin);
+    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(updatedAdmin));
+  }, [admin]);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       admin,
       token,
       loading: false,
       login,
+      updateAdmin,
       logout,
     }),
-    [admin, token],
+    [admin, token, updateAdmin],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
