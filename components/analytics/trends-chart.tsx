@@ -92,6 +92,7 @@ export function TrendsChart({ data, isLoading, groupBy, showTrendLine = true }: 
       pendente: item.pendente,
       em_andamento: item.em_andamento,
       resolvido: item.resolvido,
+      trend: null as number | null,
     }));
 
     // Calcular linha de tendência apenas para o total
