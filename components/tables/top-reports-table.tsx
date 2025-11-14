@@ -2,7 +2,6 @@
 
 import {
   ArrowUpRight,
-  TrendingUp,
   Timer,
 } from "lucide-react";
 import { TopReportsResponse } from "@/types/dashboard";
@@ -25,7 +24,6 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
             Casos com maior engajamento ou mais tempo aguardando resolução.
           </p>
         </div>
-        <TrendingUp className="size-5 text-emerald-400 shrink-0 ml-2" />
       </header>
       <div className="overflow-x-auto">
         <table className="min-w-[800px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
@@ -65,10 +63,6 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
                     <span>Likes: {report.likesCount}</span>
                     <span>Views: {report.viewsCount}</span>
                     <span>Shares: {report.sharesCount}</span>
-                    <span className="inline-flex items-center gap-1 text-emerald-300">
-                      <TrendingUp className="size-3" />
-                      {report.engagementScore.toFixed(0)}
-                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-300">

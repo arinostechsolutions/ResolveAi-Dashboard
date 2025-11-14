@@ -14,8 +14,11 @@ import { StatusDistributionChart } from "@/components/charts/status-distribution
 import { TopReportsTable } from "@/components/tables/top-reports-table";
 import { ReportsMap } from "@/components/map/reports-map";
 import { DashboardFilters, DashboardDateRange } from "@/components/dashboard/dashboard-filters";
+import { EngagementRanking } from "@/components/dashboard/engagement-ranking";
 import { useRouter } from "next/navigation";
 import { TopReportsResponse } from "@/types/dashboard";
+import { useAuth } from "@/context/auth-context";
+import { useSecretariaFilter } from "@/context/secretaria-context";
 import {
   AlertTriangle,
   CheckCircle,
@@ -28,7 +31,10 @@ const formatNumber = (value: number) =>
 
 export function DashboardHome() {
   const { cityId } = useCity();
+  const { admin } = useAuth();
+  const { secretariaId } = useSecretariaFilter();
   const router = useRouter();
+  const isMayor = admin?.isMayor && !admin?.isSuperAdmin;
   const [dateRange, setDateRange] = useState<DashboardDateRange>({});
   const [topReportsPage, setTopReportsPage] = useState(1);
   const [topReportsLimit, setTopReportsLimit] = useState(2);
@@ -36,10 +42,12 @@ export function DashboardHome() {
   const overview = useDashboardOverview({
     cityId,
     ...dateRange,
+    secretariaId: secretariaId || undefined,
   });
   const summary = useReportsSummary({
     cityId,
     ...dateRange,
+    secretariaId: secretariaId || undefined,
   });
   // Buscar irregularidades em destaque (todas, ordenadas por engajamento)
   const topReports = useTopReports({
@@ -48,10 +56,25 @@ export function DashboardHome() {
     status: "all", // Buscar todas para mostrar as mais engajadas
     page: topReportsPage,
     limit: topReportsLimit,
+    secretariaId: secretariaId || undefined,
+  });
+
+  // Buscar top 3 para o ranking (sem paginação)
+  // Excluir resolvidos e respeitar filtro de data
+  const rankingReports = useTopReports({
+    cityId,
+    sort: "engagement",
+    status: "all", // Backend excluirá resolvidos automaticamente
+    page: 1,
+    limit: 3,
+    secretariaId: secretariaId || undefined,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
   });
   const map = useReportsMap({
     cityId,
     status: undefined, // Mostrar todas as irregularidades
+    secretariaId: secretariaId || undefined,
   });
 
   const handleFollowReport = useCallback(
@@ -66,7 +89,7 @@ export function DashboardHome() {
 
 
   return (
-    <div className="flex flex-col gap-6 pb-12 overflow-x-hidden">
+    <div className="flex flex-col gap-6 pb-12">
       <header className="mb-2">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Visão Geral
@@ -76,7 +99,7 @@ export function DashboardHome() {
         </p>
       </header>
       <DashboardFilters currentRange={dateRange} onApply={setDateRange} />
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 overflow-x-hidden">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           title="Irregularidades totais"
           value={
@@ -129,6 +152,14 @@ export function DashboardHome() {
         />
       </section>
 
+      {/* Ranking de Engajamento */}
+      <section>
+        <EngagementRanking
+          data={rankingReports.data?.results || []}
+          isLoading={rankingReports.isLoading}
+        />
+      </section>
+
       <section className="grid gap-6 lg:grid-cols-5">
         <div className="lg:col-span-3">
           {summary.isLoading || !summary.data ? (
@@ -151,8 +182,8 @@ export function DashboardHome() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-3">
-        <div className="xl:col-span-2 overflow-x-hidden">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
+        <div className="xl:col-span-2">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 Itens por página:
@@ -184,7 +215,7 @@ export function DashboardHome() {
               )}
             </div>
           </div>
-          <div className="overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
+          <div className="overflow-x-auto">
             {topReports.isLoading ? (
               <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
                 Carregando irregularidades em destaque...

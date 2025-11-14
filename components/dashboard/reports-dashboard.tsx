@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useCity } from "@/context/city-context";
+import { useSecretariaFilter } from "@/context/secretaria-context";
 import { useReportsSummary } from "@/hooks/use-reports-summary";
 import { useTopReports } from "@/hooks/use-top-reports";
 import { TopReportsTable } from "@/components/tables/top-reports-table";
@@ -10,13 +12,19 @@ import { Layers, MapPin, FileText, ChevronLeft, ChevronRight, Download, FileDown
 import { clsx } from "clsx";
 import { convertToCSV, downloadCSV, formatDateForFilename, exportToPDF } from "@/lib/export-utils";
 import { toast } from "react-hot-toast";
+import { TopReportsResponse } from "@/types/dashboard";
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 }).format(value);
 
 export function ReportsDashboard() {
+  const router = useRouter();
   const { cityId } = useCity();
-  const summary = useReportsSummary({ cityId });
+  const { secretariaId } = useSecretariaFilter();
+  const summary = useReportsSummary({ 
+    cityId,
+    secretariaId: secretariaId || undefined,
+  });
   const [topReportsPage, setTopReportsPage] = useState(1);
   const [topReportsLimit, setTopReportsLimit] = useState(2);
   const topReports = useTopReports({ 
@@ -25,7 +33,18 @@ export function ReportsDashboard() {
     status: "all", 
     limit: topReportsLimit,
     page: topReportsPage,
+    secretariaId: secretariaId || undefined,
   });
+
+  const handleFollowReport = useCallback(
+    (report: TopReportsResponse["results"][number]) => {
+      const query = new URLSearchParams();
+      query.set("q", report.id);
+      query.set("status", report.status || "all");
+      router.push(`/actions?${query.toString()}`);
+    },
+    [router],
+  );
 
   const pendingTotal =
     summary.data?.byStatus.find((item) => item.status === "pendente")
@@ -88,7 +107,7 @@ export function ReportsDashboard() {
   }, [topReports.data]);
 
   return (
-    <div className="flex flex-col gap-6 pb-12 overflow-x-hidden">
+    <div className="flex flex-col gap-6 pb-12">
       <header className="mb-2">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Relatórios
@@ -97,7 +116,7 @@ export function ReportsDashboard() {
           Visualize e exporte relatórios detalhados das irregularidades.
         </p>
       </header>
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 overflow-x-hidden">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           title="Pendentes"
           value={
@@ -141,8 +160,8 @@ export function ReportsDashboard() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-3">
-        <div className="xl:col-span-2 overflow-x-hidden">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
+        <div className="xl:col-span-2">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 Itens por página:
@@ -194,14 +213,17 @@ export function ReportsDashboard() {
               )}
             </div>
           </div>
-          <div className="overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
+          <div className="overflow-x-auto">
             {topReports.isLoading ? (
               <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
                 Carregando fila de atendimentos...
               </div>
             ) : topReports.data && topReports.data.results.length > 0 ? (
               <>
-                <TopReportsTable data={topReports.data.results} />
+                <TopReportsTable 
+                  data={topReports.data.results} 
+                  onFollow={handleFollowReport}
+                />
                 {/* Paginação */}
                 {topReports.data.totalPages > 1 && (
                   <div className="mt-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">

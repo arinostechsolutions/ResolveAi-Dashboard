@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import apiClient from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 
@@ -66,6 +67,8 @@ export default function LoginPage() {
         cpf: admin.cpf,
         allowedCities: admin.allowedCities ?? [],
         isSuperAdmin: admin.isSuperAdmin ?? false,
+        isMayor: admin.isMayor ?? false,
+        secretaria: admin.secretaria ?? null,
         lastLoginAt: admin.lastLoginAt,
       }, values.remember);
 
@@ -79,18 +82,20 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 py-12">
       <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl shadow-slate-900/40 backdrop-blur">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300">
-            <ShieldCheck className="size-6" />
+        <div className="mb-8 flex flex-col items-center gap-4">
+          <div className="relative h-32 w-64">
+            <Image
+              src="/resolveai-fundo-transparente.png"
+              alt="ResolveAI Logo"
+              fill
+              className="object-contain"
+              priority
+              unoptimized
+            />
           </div>
-          <div>
-            <h1 className="text-2xl font-semibold text-white">
-              ResolveAI Dashboard
-            </h1>
-            <p className="text-sm text-slate-400">
-              Área restrita para prefeituras. Informe suas credenciais.
-            </p>
-          </div>
+          <p className="text-sm text-center text-slate-400">
+            Área restrita para prefeituras. Informe suas credenciais.
+          </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>

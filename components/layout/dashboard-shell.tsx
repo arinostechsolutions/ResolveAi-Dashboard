@@ -5,6 +5,8 @@ import { Sidebar } from "./sidebar";
 import { Topbar } from "./topbar";
 import { CitySelect } from "../selects/city-select";
 import { CityProvider } from "@/context/city-context";
+import { SecretariaProvider } from "@/context/secretaria-context";
+import { SidebarProvider } from "@/context/sidebar-context";
 import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_CITY_ID } from "@/lib/constants";
@@ -50,25 +52,29 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   return (
     <CityProvider key={cityKey} initialCity={initialCity}>
-      <div className="flex min-h-screen w-full overflow-x-hidden">
-        <div className="hidden lg:flex lg:w-64 xl:w-72">
-          <Sidebar />
-        </div>
-        <div className="flex min-h-screen flex-1 flex-col bg-slate-950 overflow-x-hidden">
-          <Topbar citySelect={<CitySelect />} />
-          <main className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 lg:px-8 max-w-full">
-            {children}
-          </main>
-          <footer className="border-t border-slate-800 bg-slate-900/60 px-3 py-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center">
-              <p className="text-xs text-slate-400">
-                Desenvolvido por{" "}
-                <span className="font-semibold text-emerald-400">ArinoTech Solutions</span>
-              </p>
+      <SecretariaProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full overflow-x-hidden">
+            <div className="hidden lg:flex">
+              <Sidebar />
             </div>
-          </footer>
-        </div>
-      </div>
+            <div className="flex min-h-screen flex-1 flex-col bg-slate-950">
+              <Topbar citySelect={<CitySelect />} />
+              <main className="flex-1 px-3 py-4 sm:px-4 sm:py-6 lg:px-8">
+                {children}
+              </main>
+              <footer className="border-t border-slate-800 bg-slate-900/60 px-3 py-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-center">
+                  <p className="text-xs text-slate-400">
+                    Desenvolvido por{" "}
+                    <span className="font-semibold text-emerald-400">ArinosTech Solutions</span>
+                  </p>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </SidebarProvider>
+      </SecretariaProvider>
     </CityProvider>
   );
 }

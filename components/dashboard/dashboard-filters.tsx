@@ -99,7 +99,7 @@ export function DashboardFilters({
   }, [currentRange.startDate, currentRange.endDate]);
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-3 py-4 shadow-lg shadow-slate-900/30 sm:px-4 sm:py-4 lg:px-6 overflow-x-hidden">
+    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-3 py-4 shadow-lg shadow-slate-900/30 sm:px-4 sm:py-4 lg:px-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/70 text-emerald-300">

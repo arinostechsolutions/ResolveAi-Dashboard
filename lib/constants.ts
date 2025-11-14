@@ -20,6 +20,23 @@ export const NAV_ITEMS = [
     icon: "ClipboardCheck",
   },
   {
+    title: "Cadastros",
+    href: "/admin/secretarias",
+    icon: "Settings",
+    superAdminOnly: true,
+  },
+  {
+    title: "Observações",
+    href: "/observations",
+    icon: "MessageSquare",
+    mayorOnly: true,
+  },
+  {
+    title: "Gráficos",
+    href: "/analytics",
+    icon: "TrendingUp",
+  },
+  {
     title: "Perfil",
     href: "/profile",
     icon: "User",

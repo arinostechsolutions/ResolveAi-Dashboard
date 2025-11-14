@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useCity } from "@/context/city-context";
+import { useSecretariaFilter } from "@/context/secretaria-context";
 import { useReportsMap } from "@/hooks/use-reports-map";
 import { ReportsMap } from "@/components/map/reports-map";
 import { clsx } from "clsx";
@@ -10,10 +11,11 @@ import { formatStatusLabel } from "@/lib/utils";
 
 export function MapDashboard() {
   const { cityId } = useCity();
+  const { secretariaId } = useSecretariaFilter();
   const [status, setStatus] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("");
 
-  const statusOptionsQuery = useReportStatusOptions(cityId);
+  const statusOptionsQuery = useReportStatusOptions(cityId, secretariaId || undefined);
 
   const statusFilters = useMemo(() => {
     const statuses = statusOptionsQuery.data?.statuses ?? [];
@@ -25,12 +27,13 @@ export function MapDashboard() {
     cityId,
     status: status === "all" ? undefined : status,
     reportType: reportType || undefined,
+    secretariaId: secretariaId || undefined,
   });
 
   const data = map.data;
 
   return (
-    <div className="flex flex-col gap-6 pb-12 overflow-x-hidden">
+    <div className="flex flex-col gap-6 pb-12">
       <header className="mb-2">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Mapa Estratégico
@@ -39,7 +42,7 @@ export function MapDashboard() {
           Visualize a distribuição geográfica das irregularidades e use os filtros para focar em regiões ou categorias prioritárias.
         </p>
       </header>
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6 overflow-x-hidden">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6">
         <header className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0 w-full sm:w-auto">
             <div className="flex flex-wrap gap-2">

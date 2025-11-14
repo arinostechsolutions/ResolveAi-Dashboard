@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useCity } from "@/context/city-context";
+import { useSecretariaFilter } from "@/context/secretaria-context";
 import { useReportStatusOptions } from "@/hooks/use-report-status-options";
 import { useReportsList, type ReportsListResponse } from "@/hooks/use-reports-list";
 import { useUpdateReportStatus } from "@/hooks/use-update-report-status";
@@ -24,6 +25,7 @@ function useDebouncedValue<T>(value: T, delay = 400) {
 
 export function ActionsDashboard() {
   const { cityId } = useCity();
+  const { secretariaId } = useSecretariaFilter();
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialStatus = searchParams.get("status") ?? "pendente";
@@ -31,7 +33,7 @@ export function ActionsDashboard() {
   const initialPage = parseInt(searchParams.get("page") ?? "1", 10);
   const initialLimit = parseInt(searchParams.get("limit") ?? "2", 10);
 
-  const statusOptionsQuery = useReportStatusOptions(cityId);
+  const statusOptionsQuery = useReportStatusOptions(cityId, secretariaId || undefined);
   const [statusFilter, setStatusFilter] = useState<string>(
     initialStatus || "pendente",
   );
@@ -46,6 +48,7 @@ export function ActionsDashboard() {
     search: debouncedSearch,
     page: currentPage,
     limit: itemsPerPage,
+    secretariaId: secretariaId || undefined,
   });
 
   const mutation = useUpdateReportStatus();
@@ -128,7 +131,7 @@ export function ActionsDashboard() {
 
 
   return (
-    <div className="flex min-h-full flex-col gap-6 pb-12 overflow-x-hidden">
+    <div className="flex min-h-full flex-col gap-6 pb-12">
       <header className="mb-2">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Ações
@@ -137,7 +140,7 @@ export function ActionsDashboard() {
           Atualize o status das ocorrências e acompanhe o processamento das demandas da cidade.
         </p>
       </header>
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6 overflow-x-hidden">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6">
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-2">
@@ -210,7 +213,7 @@ export function ActionsDashboard() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6 overflow-x-hidden">
+      <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6">
         <header className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <h2 className="text-base font-semibold text-white sm:text-lg">
