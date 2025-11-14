@@ -34,6 +34,7 @@ type UseReportsListParams = {
   search?: string;
   page?: number;
   limit?: number;
+  secretariaId?: string;
 };
 
 async function fetchReportsList({
@@ -42,18 +43,20 @@ async function fetchReportsList({
   search,
   page = 1,
   limit = 10,
+  secretariaId,
 }: UseReportsListParams): Promise<ReportsListResponse> {
+  const params: Record<string, string | number> = {
+    cityId: cityId!,
+    status,
+    page,
+    limit,
+  };
+  if (search) params.search = search;
+  if (secretariaId) params.secretariaId = secretariaId;
+
   const response = await apiClient.get<ReportsListResponse>(
     "/api/dashboard/reports/list",
-    {
-      params: {
-        cityId,
-        status,
-        search,
-        page,
-        limit,
-      },
-    },
+    { params },
   );
   return response.data;
 }
@@ -64,10 +67,11 @@ export function useReportsList({
   search,
   page = 1,
   limit = 10,
+  secretariaId,
 }: UseReportsListParams) {
   return useQuery({
-    queryKey: ["reports", "list", cityId, status, search, page, limit],
-    queryFn: () => fetchReportsList({ cityId, status, search, page, limit }),
+    queryKey: ["reports", "list", cityId, status, search, page, limit, secretariaId],
+    queryFn: () => fetchReportsList({ cityId, status, search, page, limit, secretariaId }),
     enabled: Boolean(cityId),
     placeholderData: keepPreviousData,
   });
