@@ -15,7 +15,7 @@ export function ObservationsPage() {
 
   useEffect(() => {
     if (!isMayor && !isSecretaria) {
-      router.replace("/");
+      router.replace("/dashboard");
     }
   }, [isMayor, isSecretaria, router]);
 

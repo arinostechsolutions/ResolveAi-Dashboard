@@ -1,7 +1,7 @@
 export const NAV_ITEMS = [
   {
     title: "Visão Geral",
-    href: "/",
+    href: "/dashboard",
     icon: "LayoutDashboard",
   },
   {

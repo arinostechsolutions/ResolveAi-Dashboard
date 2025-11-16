@@ -115,26 +115,26 @@ export function DashboardFilters({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0">
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <label className="flex flex-col text-xs text-slate-400 min-w-0">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center min-w-0 w-full sm:w-auto">
+          <div className="flex flex-col gap-3 sm:flex-row w-full sm:w-auto">
+            <label className="flex flex-col text-xs text-slate-400 min-w-0 flex-1 sm:flex-none sm:w-auto">
               Início
               <input
                 type="date"
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
                 max={endDate || undefined}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                className="mt-1 w-full min-w-0 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
               />
             </label>
-            <label className="flex flex-col text-xs text-slate-400 min-w-0">
+            <label className="flex flex-col text-xs text-slate-400 min-w-0 flex-1 sm:flex-none sm:w-auto">
               Fim
               <input
                 type="date"
                 value={endDate}
                 onChange={(event) => setEndDate(event.target.value)}
                 min={startDate || undefined}
-                className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
+                className="mt-1 w-full min-w-0 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
               />
             </label>
           </div>

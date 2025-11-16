@@ -56,7 +56,7 @@ export default function SecretariasPage() {
 
   // Redirecionar se não for super admin nem prefeito
   if (typeof window !== "undefined" && !hasFullAccess) {
-    router.replace("/");
+    router.replace("/dashboard");
     return null;
   }
 

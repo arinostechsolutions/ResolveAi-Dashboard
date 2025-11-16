@@ -54,13 +54,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
     <CityProvider key={cityKey} initialCity={initialCity}>
       <SecretariaProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen w-full overflow-x-hidden">
+          <div className="flex h-full w-full overflow-x-hidden">
             <div className="hidden lg:flex">
               <Sidebar />
             </div>
-            <div className="flex min-h-screen flex-1 flex-col bg-slate-950">
+            <div className="flex h-full flex-1 flex-col bg-slate-950 overflow-hidden">
               <Topbar citySelect={<CitySelect />} />
-              <main className="flex-1 px-3 py-4 sm:px-4 sm:py-6 lg:px-8">
+              <main className="flex-1 px-3 py-4 sm:px-4 sm:py-6 lg:px-8 overflow-y-auto overflow-x-hidden">
                 {children}
               </main>
               <footer className="border-t border-slate-800 bg-slate-900/60 px-3 py-4 sm:px-6 lg:px-8">

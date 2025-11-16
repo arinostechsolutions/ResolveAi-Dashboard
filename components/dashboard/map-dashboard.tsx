@@ -33,7 +33,7 @@ export function MapDashboard() {
   const data = map.data;
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-6 pb-12 min-h-0">
       <header className="mb-2">
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white">
           Mapa Estratégico

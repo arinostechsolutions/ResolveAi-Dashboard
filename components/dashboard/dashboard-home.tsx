@@ -89,7 +89,7 @@ export function DashboardHome() {
 
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-6 pb-12 min-h-0">
       <header className="mb-2">
         <h1 className="text-2xl font-semibold text-white sm:text-3xl">
           Visão Geral
