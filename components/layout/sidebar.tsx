@@ -72,7 +72,7 @@ export function Sidebar() {
         isCollapsed ? "justify-center px-2" : "justify-between px-6"
       )}>
         {!isCollapsed && (
-          <Link href="/" className="font-semibold tracking-tight text-lg">
+          <Link href="/dashboard" className="font-semibold tracking-tight text-lg">
             ResolveAI Dashboard
           </Link>
         )}
@@ -107,9 +107,24 @@ export function Sidebar() {
       >
         <div className="flex-1">
           {navItemsWithIcons.map(({ title, href, Icon }) => {
-            const isActive =
-              pathname === href ||
-              (href !== "/" && pathname.startsWith(href));
+            // Lógica melhorada para detectar rota ativa
+            const isActive = (() => {
+              // Match exato sempre funciona
+              if (pathname === href) return true;
+             
+              // Para rotas específicas, verificar se o pathname começa com o href seguido de "/"
+              // Isso evita falsos positivos (ex: /admin não deve ser ativo quando está em /administer)
+              if (href !== "/" && href !== "/dashboard") {
+                return pathname.startsWith(href + "/") || pathname === href;
+              }
+             
+              // Para /dashboard, apenas match exato (não queremos que seja ativo em subrotas)
+              if (href === "/dashboard") {
+                return pathname === "/dashboard";
+              }
+             
+              return false;
+            })();
             
             const showBadge = href === "/observations" && unreadCount > 0;
 
@@ -119,11 +134,10 @@ export function Sidebar() {
                 type="button"
                 onClick={() => handleNavClick(href)}
                 className={clsx(
-                  "w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors text-left relative",
-                  "hover:bg-slate-800 hover:text-white",
+                  "w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 text-left relative",
                   isActive
-                    ? "bg-gradient-to-r from-emerald-500/90 to-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20"
-                    : "text-slate-300",
+                    ? "bg-gradient-to-r from-emerald-500 to-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/30 font-semibold"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white",
                   isCollapsed && "justify-center px-2"
                 )}
                 title={isCollapsed ? title : undefined}

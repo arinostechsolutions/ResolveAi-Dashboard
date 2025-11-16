@@ -19,14 +19,14 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const { login, admin, loading } = useAuth();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && admin) {
-      router.replace("/");
+      router.replace("/dashboard");
     }
   }, [admin, loading, router]);
 
@@ -72,7 +72,7 @@ export default function LoginPage() {
         lastLoginAt: admin.lastLoginAt,
       }, values.remember);
 
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Erro ao realizar login:", error);
       setErrorMessage("Credenciais inválidas ou usuário sem permissão.");
@@ -157,9 +157,14 @@ export default function LoginPage() {
         <div className="mt-6 text-center text-xs text-slate-500">
           Suporte ResolveAI · <a href="https://wa.me/5522992645933" target="_blank" rel="noopener noreferrer" className="text-emerald-300 hover:text-emerald-200">(22) 99264-5933</a>
         </div>
+        
+        <div className="mt-4 text-center">
+          <Link href="/" className="text-xs text-emerald-400 hover:text-emerald-300">
+            ← Voltar para o site
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
-
 

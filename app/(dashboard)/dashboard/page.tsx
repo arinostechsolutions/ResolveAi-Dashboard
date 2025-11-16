@@ -5,9 +5,7 @@ export const metadata: Metadata = {
   title: "Visão Geral | Dashboard",
 };
 
-export default function DashboardPage() {
+export default function DashboardHomePage() {
   return <DashboardHome />;
 }
-
-
 

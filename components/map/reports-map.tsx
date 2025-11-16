@@ -116,7 +116,7 @@ export function ReportsMap({ data, cityId }: ReportsMapProps) {
   }
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-slate-900/30">
+    <section className="rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-slate-900/30 overflow-hidden">
       <header className="flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
         <div className="min-w-0">
           <h2 className="text-base font-semibold text-white sm:text-lg">
@@ -127,7 +127,7 @@ export function ReportsMap({ data, cityId }: ReportsMapProps) {
           </p>
         </div>
       </header>
-      <div className="h-[28rem] w-full">
+      <div className="h-[20rem] sm:h-[28rem] w-full relative">
         <MapContainer
           key={cityId ?? "default-map"}
           center={center}

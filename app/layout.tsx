@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ResolveAI Dashboard",
-  description: "Monitoramento de irregularidades e relatórios para prefeituras",
+  title: "ResolveAI - Gestão Inteligente de Irregularidades Urbanas",
+  description: "Plataforma completa para gestão de irregularidades urbanas. Conecte cidadãos e prefeituras em uma solução moderna e eficiente.",
 };
 
 export default function RootLayout({
@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${inter.variable} bg-slate-950 text-slate-100 antialiased`}>
+    <html lang="pt-BR" className="h-full">
+      <body className={`${inter.variable} bg-slate-950 text-slate-100 antialiased h-full`}>
         <AuthProvider>
           <QueryProvider>
             {children}
