@@ -44,13 +44,7 @@ const Popup = dynamic(
   { ssr: false },
 );
 
-const useMap = dynamic(
-  async () => {
-    const mod = await import("react-leaflet");
-    return { default: mod.useMap };
-  },
-  { ssr: false },
-) as any;
+// useMap será importado diretamente dentro do componente que está dentro do MapContainer
 
 type ReportsMapProps = {
   data?: ReportsMapResponse;
@@ -88,7 +82,19 @@ function MapFocusController({
   focusedReport: ReportsMapResponse["reports"][number] | null;
   mapRef: React.MutableRefObject<L.Map | null>;
 }) {
-  const { useMap } = require("react-leaflet");
+  // Importar useMap dinamicamente apenas quando necessário (dentro do MapContainer)
+  const useMap = (() => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { useMap: useMapHook } = require("react-leaflet");
+      return useMapHook;
+    } catch {
+      return null;
+    }
+  })();
+  
+  if (!useMap) return null;
+  
   const map = useMap();
 
   useEffect(() => {
