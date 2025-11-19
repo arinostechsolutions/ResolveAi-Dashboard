@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
     return Array.from(bairros).sort();
   }, [neighborhoodData.data]);
 
-  // Extrair lista de tipos de irregularidade
+  // Extrair lista de tipos de sugestão de melhoria
   const reportTypesList = useMemo(() => {
     return reportTypesData?.reportTypes.map((rt) => ({
       id: rt.id,

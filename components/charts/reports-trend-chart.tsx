@@ -53,10 +53,10 @@ export function ReportsTrendChart({ timeline }: ReportsTrendChartProps) {
       <header className="mb-4 flex items-center justify-between sm:mb-6">
         <div className="min-w-0">
           <h2 className="text-base font-semibold text-white sm:text-lg">
-            Evolução de irregularidades
+            Evolução de sugestões de melhorias
           </h2>
           <p className="text-xs text-slate-400 sm:text-sm">
-            Total diário de irregularidades registradas na plataforma ResolveAI.
+            Total diário de sugestões de melhorias registradas na plataforma ResolveAI.
           </p>
         </div>
       </header>

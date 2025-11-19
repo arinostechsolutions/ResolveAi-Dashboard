@@ -64,7 +64,7 @@ export function TypeDistributionChart({ data, isLoading }: TypeDistributionChart
           Distribuição por Tipo
         </h2>
         <p className="mt-1 text-xs text-slate-400 sm:text-sm">
-          Irregularidades agrupadas por tipo (top 8)
+          Sugestões de melhorias agrupadas por tipo (top 8)
         </p>
       </header>
 
@@ -112,7 +112,7 @@ export function TypeDistributionChart({ data, isLoading }: TypeDistributionChart
                   color: "#f8fafc",
                 }}
                 formatter={(value: number, name: string, props: any) => [
-                  `${value} irregularidades`,
+                  `${value} sugestões de melhorias`,
                   props.payload.fullName || name,
                 ]}
               />

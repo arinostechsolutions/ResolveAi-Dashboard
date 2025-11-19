@@ -54,10 +54,10 @@ export function NeighborhoodChart({ data, isLoading }: NeighborhoodChartProps) {
     >
       <header className="mb-4 sm:mb-6">
         <h2 className="text-base font-semibold text-white sm:text-lg">
-          Irregularidades por Bairro
+          Sugestões de Melhorias por Bairro
         </h2>
         <p className="mt-1 text-xs text-slate-400 sm:text-sm">
-          Distribuição de irregularidades por bairro (top 10)
+          Distribuição de sugestões de melhorias por bairro (top 10)
         </p>
       </header>
 

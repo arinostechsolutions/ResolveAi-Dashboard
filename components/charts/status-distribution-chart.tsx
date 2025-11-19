@@ -51,7 +51,7 @@ export function StatusDistributionChart({
           Distribuição por status
         </h2>
         <p className="text-xs text-slate-400 sm:text-sm">
-          Percentual de irregularidades em cada etapa do fluxo operacional.
+          Percentual de sugestões de melhorias em cada etapa do fluxo operacional.
         </p>
       </header>
 

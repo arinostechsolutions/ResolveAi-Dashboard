@@ -21,7 +21,7 @@ export function SiteFooter() {
               </div>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-slate-400">
-              Plataforma inteligente para gestão de irregularidades urbanas.
+              Plataforma inteligente para gestão de sugestões de melhorias urbanas.
               Conectando cidadãos e prefeituras para cidades mais organizadas.
             </p>
           </div>

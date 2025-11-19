@@ -45,7 +45,7 @@ export function Topbar({ citySelect }: TopbarProps) {
         <div className="flex items-start justify-between min-w-0 gap-2">
           <div className="min-w-0 flex-1">
             <h1 className="text-lg font-semibold text-white tracking-tight sm:text-xl lg:text-2xl truncate">
-              Monitoramento das Irregularidades
+              Monitoramento das Sugestões de Melhorias
             </h1>
             <p className="text-xs text-slate-400 sm:text-sm hidden sm:block">
               Acompanhe em tempo real a operação da ResolveAI junto à prefeitura.

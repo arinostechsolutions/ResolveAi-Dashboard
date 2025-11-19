@@ -28,7 +28,7 @@ const ACTION_TYPE_LABELS: Record<string, string> = {
   secretaria_create: "Criação de Secretaria",
   secretaria_update: "Edição de Secretaria",
   secretaria_delete: "Deleção de Secretaria",
-  report_delete: "Deleção de Irregularidade",
+  report_delete: "Deleção de Sugestão de Melhoria",
   user_ban: "Banimento de Usuário",
   content_report_resolve: "Resolução de Denúncia",
 };

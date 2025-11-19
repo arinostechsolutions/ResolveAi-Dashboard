@@ -61,7 +61,7 @@ export function ReportsDashboard() {
 
     const headers: Record<string, string> = {
       id: "ID",
-      reportType: "Tipo de Irregularidade",
+      reportType: "Tipo de Sugestão de Melhoria",
       address: "Endereço",
       bairro: "Bairro",
       status: "Status",
@@ -73,7 +73,7 @@ export function ReportsDashboard() {
     };
 
     const csvContent = convertToCSV(topReports.data.results, headers);
-    const filename = `relatorio_irregularidades_${formatDateForFilename()}.csv`;
+    const filename = `relatorio_sugestoes_melhorias_${formatDateForFilename()}.csv`;
     downloadCSV(csvContent, filename);
     toast.success("Dados exportados em CSV com sucesso!");
   }, [topReports.data]);
@@ -95,8 +95,8 @@ export function ReportsDashboard() {
         createdAt: "Data",
       };
 
-      const title = "Relatório de Irregularidades";
-      const filename = `relatorio_irregularidades_${formatDateForFilename()}.pdf`;
+      const title = "Relatório de Sugestões de Melhorias";
+      const filename = `relatorio_sugestoes_melhorias_${formatDateForFilename()}.pdf`;
       
       await exportToPDF(topReports.data.results, headers, title, filename);
       toast.success("Dados exportados em PDF com sucesso!");
@@ -113,7 +113,7 @@ export function ReportsDashboard() {
           Relatórios
         </h1>
         <p className="mt-1 text-sm text-slate-400">
-          Visualize e exporte relatórios detalhados das irregularidades.
+          Visualize e exporte relatórios detalhados das sugestões de melhorias.
         </p>
       </header>
       <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
@@ -122,7 +122,7 @@ export function ReportsDashboard() {
           value={
             summary.isLoading ? "—" : formatNumber(pendingTotal)
           }
-          description="Irregularidades aguardando triagem ou encaminhamento."
+          description="Sugestões de melhorias aguardando triagem ou encaminhamento."
           icon={<FileText className="size-6" />}
           tone="amber"
         />
@@ -147,7 +147,7 @@ export function ReportsDashboard() {
           tone="emerald"
         />
         <SummaryCard
-          title="Tipos de irregularidade"
+          title="Tipos de sugestão de melhoria"
           value={
             summary.isLoading
               ? "—"
@@ -187,7 +187,7 @@ export function ReportsDashboard() {
                     const data = topReports.data;
                     const start = (data.page - 1) * data.limit + 1;
                     const end = Math.min(start + data.results.length - 1, data.total);
-                    return `Exibindo ${start}-${end} de ${data.total} irregularidades`;
+                    return `Exibindo ${start}-${end} de ${data.total} sugestões de melhorias`;
                   })()}
                 </p>
               )}
@@ -289,10 +289,10 @@ export function ReportsDashboard() {
             ) : (
               <div className="flex h-64 flex-col items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
                 <p className="text-sm font-medium text-slate-300">
-                  Nenhuma irregularidade encontrada
+                  Nenhuma sugestão de melhoria encontrada
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
-                  Não há irregularidades cadastradas para esta cidade no momento.
+                  Não há sugestões de melhorias cadastradas para esta cidade no momento.
                 </p>
               </div>
             )}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
-import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp, LogOut } from "lucide-react";
+import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp, LogOut, Sparkles } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useState, useCallback } from "react";
 import { useAuth } from "@/context/auth-context";
@@ -19,6 +19,7 @@ const iconComponents = {
   Settings,
   MessageSquare,
   TrendingUp,
+  Sparkles,
 };
 
 export function Sidebar() {
@@ -64,7 +65,7 @@ export function Sidebar() {
 
   return (
     <aside className={clsx(
-      "bg-slate-900/80 backdrop-blur border-r border-slate-800 text-slate-100 transition-all duration-300",
+      "relative z-50 bg-slate-900/80 backdrop-blur border-r border-slate-800 text-slate-100 transition-all duration-300",
       isCollapsed ? "lg:w-16" : "lg:w-64 xl:w-72"
     )}>
       <div className={clsx(

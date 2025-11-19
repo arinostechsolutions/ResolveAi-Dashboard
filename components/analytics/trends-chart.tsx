@@ -117,7 +117,7 @@ export function TrendsChart({ data, isLoading, groupBy, showTrendLine = true }: 
           Tendências Temporais
         </h2>
         <p className="mt-1 text-xs text-slate-400 sm:text-sm">
-          Evolução de irregularidades ao longo do tempo
+          Evolução de sugestões de melhorias ao longo do tempo
         </p>
       </header>
 

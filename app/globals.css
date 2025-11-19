@@ -37,6 +37,35 @@ a {
 .leaflet-container {
   font-family: inherit;
   border-radius: 1.5rem;
+  z-index: 10;
+}
+
+.leaflet-map-pane {
+  z-index: 10;
+}
+
+.leaflet-tile-pane {
+  z-index: 1;
+}
+
+.leaflet-overlay-pane {
+  z-index: 4;
+}
+
+.leaflet-shadow-pane {
+  z-index: 5;
+}
+
+.leaflet-marker-pane {
+  z-index: 6;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 7;
+}
+
+.leaflet-popup-pane {
+  z-index: 8;
 }
 
 .leaflet-marker-icon.report-marker-icon {
@@ -49,12 +78,14 @@ a {
 /* Estilos para popup no mobile */
 @media (max-width: 640px) {
   .leaflet-popup {
-    max-width: 90vw !important;
+    max-width: 85vw !important;
+    width: 85vw !important;
   }
   
   .leaflet-popup-content-wrapper {
-    max-width: 90vw !important;
-    max-height: 70vh !important;
+    max-width: 85vw !important;
+    width: 85vw !important;
+    max-height: 45vh !important;
     overflow-y: auto !important;
     border-radius: 0.75rem !important;
   }
@@ -62,8 +93,13 @@ a {
   .leaflet-popup-content {
     margin: 0 !important;
     width: 100% !important;
-    max-height: 70vh !important;
+    max-height: 45vh !important;
     overflow-y: auto !important;
+  }
+  
+  .leaflet-popup-tip {
+    width: 12px !important;
+    height: 12px !important;
   }
   
   .leaflet-popup-close-button {
@@ -83,4 +119,10 @@ a {
   .leaflet-popup-close-button:hover {
     background-color: rgba(15, 23, 42, 0.95) !important;
   }
+}
+
+/* Estilos para popup no desktop também */
+.leaflet-popup-content-wrapper {
+  max-height: 60vh !important;
+  overflow-y: auto !important;
 }

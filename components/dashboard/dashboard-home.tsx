@@ -49,7 +49,7 @@ export function DashboardHome() {
     ...dateRange,
     secretariaId: secretariaId || undefined,
   });
-  // Buscar irregularidades em destaque (todas, ordenadas por engajamento)
+  // Buscar sugestões de melhorias em destaque (todas, ordenadas por engajamento)
   const topReports = useTopReports({
     cityId,
     sort: "engagement",
@@ -73,7 +73,7 @@ export function DashboardHome() {
   });
   const map = useReportsMap({
     cityId,
-    status: undefined, // Mostrar todas as irregularidades
+    status: undefined, // Mostrar todas as sugestões de melhorias
     secretariaId: secretariaId || undefined,
   });
 
@@ -95,13 +95,13 @@ export function DashboardHome() {
           Visão Geral
         </h1>
         <p className="mt-1 text-sm text-slate-400">
-          Acompanhe o panorama geral das irregularidades e métricas principais.
+          Acompanhe o panorama geral das sugestões de melhorias e métricas principais.
         </p>
       </header>
       <DashboardFilters currentRange={dateRange} onApply={setDateRange} />
       <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
-          title="Irregularidades totais"
+          title="Sugestões de Melhorias totais"
           value={
             overview.isLoading
               ? "—"
@@ -118,7 +118,7 @@ export function DashboardHome() {
               ? "—"
               : formatNumber(overview.data?.createdInPeriod ?? 0)
           }
-          description="Irregularidades registradas dentro do intervalo filtrado."
+          description="Sugestões de melhorias registradas dentro do intervalo filtrado."
           icon={<Activity className="size-6" />}
           tone="violet"
         />
@@ -209,7 +209,7 @@ export function DashboardHome() {
                     const data = topReports.data;
                     const start = (data.page - 1) * data.limit + 1;
                     const end = Math.min(start + data.results.length - 1, data.total);
-                    return `Exibindo ${start}-${end} de ${data.total} irregularidades`;
+                    return `Exibindo ${start}-${end} de ${data.total} sugestões de melhorias`;
                   })()}
                 </p>
               )}
@@ -218,7 +218,7 @@ export function DashboardHome() {
           <div className="overflow-x-auto">
             {topReports.isLoading ? (
               <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
-                Carregando irregularidades em destaque...
+                Carregando sugestões de melhorias em destaque...
               </div>
             ) : topReports.data && topReports.data.results.length > 0 ? (
               <>
@@ -291,10 +291,10 @@ export function DashboardHome() {
             ) : (
               <div className="flex h-64 flex-col items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
                 <p className="text-sm font-medium text-slate-300">
-                  Nenhuma irregularidade encontrada
+                  Nenhuma sugestão de melhoria encontrada
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
-                  Não há irregularidades cadastradas para esta cidade no momento.
+                  Não há sugestões de melhorias cadastradas para esta cidade no momento.
                 </p>
               </div>
             )}

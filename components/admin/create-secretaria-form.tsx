@@ -134,7 +134,7 @@ export function CreateSecretariaForm({
         {reportTypesData && reportTypesData.reportTypes.filter((rt) => !rt.secretaria).length > 0 && (
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-300">
-              Tipos de Irregularidade
+              Tipos de Sugestão de Melhoria
             </label>
             <div className="mb-2 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
@@ -142,7 +142,7 @@ export function CreateSecretariaForm({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar tipos de irregularidade..."
+                placeholder="Buscar tipos de sugestão de melhoria..."
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 pl-10 pr-4 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
               />
             </div>

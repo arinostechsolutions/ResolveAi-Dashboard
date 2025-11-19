@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
@@ -6,6 +7,7 @@ import {
 } from "lucide-react";
 import { TopReportsResponse } from "@/types/dashboard";
 import { formatStatusLabel } from "@/lib/utils";
+import { ImagePreview } from "@/components/dashboard/image-preview";
 
 type TopReportsTableProps = {
   data: TopReportsResponse["results"];
@@ -18,7 +20,7 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
       <header className="flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
         <div className="min-w-0">
           <h2 className="text-base font-semibold text-white sm:text-lg">
-            Irregularidades em destaque
+            Sugestões de Melhorias em destaque
           </h2>
           <p className="text-xs text-slate-400 sm:text-sm">
             Casos com maior engajamento ou mais tempo aguardando resolução.
@@ -36,6 +38,15 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
             <div>
               <h3 className="font-medium text-white text-sm mb-1">{report.reportType}</h3>
               <p className="text-xs text-slate-400">{report.address}</p>
+              {report.imageUrl && (
+                <div className="mt-2">
+                  <ImagePreview
+                    imageUrl={report.imageUrl}
+                    alt={report.reportType}
+                    size="md"
+                  />
+                </div>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs">
               {report.bairro && (
@@ -83,13 +94,14 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
 
       {/* Versão Desktop - Tabela */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-[800px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
+        <table className="min-w-[1000px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
           <thead className="bg-slate-900/70 uppercase tracking-wide text-slate-400">
             <tr>
-              <th className="px-6 py-3 font-medium">Irregularidade</th>
+              <th className="px-6 py-3 font-medium">Sugestão de Melhoria</th>
               <th className="px-6 py-3 font-medium">Bairro</th>
               <th className="px-6 py-3 font-medium">Status</th>
               <th className="px-6 py-3 font-medium">Engajamento</th>
+              <th className="px-6 py-3 font-medium">Imagem</th>
               <th className="px-6 py-3 font-medium">Registrada em</th>
               <th className="px-6 py-3 font-medium text-right">Ações</th>
             </tr>
@@ -121,6 +133,17 @@ export function TopReportsTable({ data, onFollow }: TopReportsTableProps) {
                     <span>Views: {report.viewsCount}</span>
                     <span>Shares: {report.sharesCount}</span>
                   </div>
+                </td>
+                <td className="px-6 py-4">
+                  {report.imageUrl ? (
+                    <ImagePreview
+                      imageUrl={report.imageUrl}
+                      alt={report.reportType}
+                      size="sm"
+                    />
+                  ) : (
+                    <span className="text-xs text-slate-500">—</span>
+                  )}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-300">
                   {new Date(report.createdAt).toLocaleDateString("pt-BR", {
