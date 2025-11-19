@@ -17,7 +17,7 @@ const features = [
   {
     name: "Mapas Interativos",
     description:
-      "Explore irregularidades geograficamente com mapas interativos que mostram a localização exata de cada relatório.",
+      "Explore sugestões de melhorias geograficamente com mapas interativos que mostram a localização exata de cada relatório.",
     icon: MapPin,
   },
   {
@@ -55,7 +55,7 @@ export function Features() {
             Recursos poderosos para sua gestão
           </h2>
           <p className="mt-4 text-lg text-slate-400">
-            Tudo que você precisa para gerenciar irregularidades urbanas de
+            Tudo que você precisa para gerenciar sugestões de melhorias urbanas de
             forma eficiente e profissional.
           </p>
         </div>

@@ -15,7 +15,7 @@ export function Hero() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400 sm:text-xl">
-            Plataforma completa para gestão de irregularidades urbanas. Conecte
+            Plataforma completa para gestão de sugestões de melhorias urbanas. Conecte
             cidadãos e prefeituras em uma solução moderna e eficiente.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -52,7 +52,7 @@ export function Hero() {
               Visualização em Tempo Real
             </h3>
             <p className="mt-2 text-sm text-slate-400">
-              Mapas interativos e análises em tempo real das irregularidades
+              Mapas interativos e análises em tempo real das sugestões de melhorias
             </p>
           </div>
           <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-6 backdrop-blur-sm">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useCity } from "@/context/city-context";
 import { useSecretariaFilter } from "@/context/secretaria-context";
 import { useReportsMap } from "@/hooks/use-reports-map";
@@ -8,12 +8,15 @@ import { ReportsMap } from "@/components/map/reports-map";
 import { clsx } from "clsx";
 import { useReportStatusOptions } from "@/hooks/use-report-status-options";
 import { formatStatusLabel } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 export function MapDashboard() {
   const { cityId } = useCity();
   const { secretariaId } = useSecretariaFilter();
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<string>("all");
   const [reportType, setReportType] = useState<string>("");
+  const [focusedReportId, setFocusedReportId] = useState<string | null>(null);
 
   const statusOptionsQuery = useReportStatusOptions(cityId, secretariaId || undefined);
 
@@ -28,9 +31,20 @@ export function MapDashboard() {
     status: status === "all" ? undefined : status,
     reportType: reportType || undefined,
     secretariaId: secretariaId || undefined,
+    reportId: focusedReportId || undefined,
   });
 
   const data = map.data;
+
+  // Ler parâmetro q da query string para focar em um report específico
+  useEffect(() => {
+    const reportId = searchParams.get("q");
+    if (reportId) {
+      setFocusedReportId(reportId);
+    } else {
+      setFocusedReportId(null);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col gap-6 pb-12 min-h-0">
@@ -39,7 +53,7 @@ export function MapDashboard() {
           Mapa Estratégico
         </h1>
         <p className="mt-1 text-xs sm:text-sm text-slate-400">
-          Visualize a distribuição geográfica das irregularidades e use os filtros para focar em regiões ou categorias prioritárias.
+          Visualize a distribuição geográfica das sugestões de melhorias e use os filtros para focar em regiões ou categorias prioritárias.
         </p>
       </header>
       <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 shadow-lg shadow-slate-900/30 sm:p-6">
@@ -111,7 +125,7 @@ export function MapDashboard() {
       </section>
 
       <div className="h-[20rem] sm:h-[30rem] w-full lg:h-[34rem]">
-        <ReportsMap data={data} cityId={cityId} />
+        <ReportsMap data={data} cityId={cityId} focusedReportId={focusedReportId} />
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ const resources = [
       {
         name: "Mapas Interativos",
         description:
-          "Explore irregularidades geograficamente com mapas interativos que mostram a localização exata de cada relatório.",
+          "Explore sugestões de melhorias geograficamente com mapas interativos que mostram a localização exata de cada relatório.",
         icon: MapPin,
       },
       {
@@ -113,7 +113,7 @@ export default function RecursosPage() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400 sm:text-xl">
-            Tudo que você precisa para gerenciar irregularidades urbanas de
+            Tudo que você precisa para gerenciar sugestões de melhorias urbanas de
             forma eficiente e profissional.
           </p>
         </div>

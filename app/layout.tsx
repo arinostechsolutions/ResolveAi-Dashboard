@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ResolveAI - Gestão Inteligente de Irregularidades Urbanas",
-  description: "Plataforma completa para gestão de irregularidades urbanas. Conecte cidadãos e prefeituras em uma solução moderna e eficiente.",
+  title: "ResolveAI - Gestão Inteligente de Sugestões de Melhorias Urbanas",
+  description: "Plataforma completa para gestão de sugestões de melhorias urbanas. Conecte cidadãos e prefeituras em uma solução moderna e eficiente.",
   verification: {
     google: "SSNXjM5FYkB0zng3IPWAEfI7MzEjshwPBiB5Li2St20",
   },

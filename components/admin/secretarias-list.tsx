@@ -87,12 +87,12 @@ export function SecretariasList({
                 </div>
                 {secretaria.reportTypes.length > 0 ? (
                   <div className="text-sm text-slate-300">
-                    <span className="text-slate-400">Tipos de irregularidade: </span>
+                    <span className="text-slate-400">Tipos de sugestão de melhoria: </span>
                     {getReportTypeLabels(secretaria.reportTypes)}
                   </div>
                 ) : (
                   <div className="text-sm text-amber-400">
-                    Nenhum tipo de irregularidade associado
+                    Nenhum tipo de sugestão de melhoria associado
                   </div>
                 )}
               </div>

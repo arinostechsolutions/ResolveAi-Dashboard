@@ -32,6 +32,11 @@ export const NAV_ITEMS = [
     mayorOnly: true,
   },
   {
+    title: "Posts Positivos",
+    href: "/positive-posts",
+    icon: "Sparkles",
+  },
+  {
     title: "Gráficos",
     href: "/analytics",
     icon: "TrendingUp",

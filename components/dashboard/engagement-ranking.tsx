@@ -83,7 +83,7 @@ export function EngagementRanking({ data, isLoading }: EngagementRankingProps) {
               Ranking de Engajamento
             </h2>
             <p className="text-xs text-slate-400">
-              Irregularidades mais importantes da cidade
+              Sugestões de Melhorias mais importantes da cidade
             </p>
           </div>
         </div>
@@ -172,7 +172,7 @@ export function EngagementRanking({ data, isLoading }: EngagementRankingProps) {
       {data.length > 3 && (
         <div className="mt-4 text-center">
           <p className="text-xs text-slate-500">
-            Mostrando top 3 de {data.length} irregularidades
+            Mostrando top 3 de {data.length} sugestões de melhorias
           </p>
         </div>
       )}

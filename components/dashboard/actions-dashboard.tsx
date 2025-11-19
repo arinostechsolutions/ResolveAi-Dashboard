@@ -7,10 +7,12 @@ import { useReportStatusOptions } from "@/hooks/use-report-status-options";
 import { useReportsList, type ReportsListResponse } from "@/hooks/use-reports-list";
 import { useUpdateReportStatus } from "@/hooks/use-update-report-status";
 import { formatStatusLabel } from "@/lib/utils";
-import { Loader2, Search, CheckCircle2, RefreshCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, Search, CheckCircle2, RefreshCcw, ChevronLeft, ChevronRight, MessageSquare, MapPin } from "lucide-react";
 import { clsx } from "clsx";
 import { toast } from "react-hot-toast";
 import { useSearchParams, useRouter } from "next/navigation";
+import { SendMessageModal } from "./send-message-modal";
+import { ImagePreview } from "./image-preview";
 
 function useDebouncedValue<T>(value: T, delay = 400) {
   const [debounced, setDebounced] = useState(value);
@@ -62,6 +64,10 @@ export function ActionsDashboard() {
   }, [statusOptionsQuery.data?.statuses]);
 
   const [draftStatuses, setDraftStatuses] = useState<Record<string, string>>({});
+  const [selectedReportForMessage, setSelectedReportForMessage] = useState<{
+    id: string;
+    reportType: string;
+  } | null>(null);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -163,7 +169,7 @@ export function ActionsDashboard() {
 
           <div className="space-y-2 md:col-span-2">
             <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
-              Buscar irregularidades
+              Buscar sugestões de melhorias
             </span>
             <div className="relative flex h-11 items-center rounded-xl border border-slate-800 bg-slate-950">
               <Search className="pointer-events-none ml-3 size-4 text-slate-500" />
@@ -235,7 +241,7 @@ export function ActionsDashboard() {
         {reportsQuery.isLoading ? (
           <div className="flex h-48 items-center justify-center text-slate-400">
             <Loader2 className="size-5 animate-spin" />
-            <span className="ml-2 text-sm">Carregando irregularidades...</span>
+            <span className="ml-2 text-sm">Carregando sugestões de melhorias...</span>
           </div>
         ) : (() => {
           const data = reportsQuery.data as ReportsListResponse | undefined;
@@ -255,6 +261,15 @@ export function ActionsDashboard() {
                       <p className="text-xs text-slate-400">{report.address}</p>
                       {report.referencia && (
                         <p className="text-xs text-slate-500 mt-1">Ref: {report.referencia}</p>
+                      )}
+                      {report.imageUrl && (
+                        <div className="mt-2">
+                          <ImagePreview
+                            imageUrl={report.imageUrl}
+                            alt={report.reportType}
+                            size="md"
+                          />
+                        </div>
                       )}
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -293,6 +308,24 @@ export function ActionsDashboard() {
                           )}
                         </button>
                       </div>
+                      <button
+                        onClick={() => setSelectedReportForMessage({ id: report.id, reportType: report.reportType })}
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-sky-500/50 bg-sky-500/10 px-3 py-2 text-xs font-medium text-sky-300 transition hover:border-sky-400 hover:bg-sky-500/20"
+                      >
+                        <MessageSquare className="size-3" />
+                        Enviar Mensagem
+                      </button>
+                      <button
+                        onClick={() => {
+                          const params = new URLSearchParams();
+                          params.set("q", report.id);
+                          router.push(`/map?${params.toString()}`);
+                        }}
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/20"
+                      >
+                        <MapPin className="size-3" />
+                        Ver no Mapa
+                      </button>
                     </div>
                   </div>
                 );
@@ -301,12 +334,14 @@ export function ActionsDashboard() {
 
             {/* Versão Desktop - Tabela */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-[640px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
+              <table className="min-w-[1000px] w-full divide-y divide-slate-800 text-left text-sm text-slate-200">
               <thead className="bg-slate-900/70 text-xs uppercase tracking-wide text-slate-400">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Irregularidade</th>
+                  <th className="px-4 py-3 font-medium">Sugestão de Melhoria</th>
                   <th className="px-4 py-3 font-medium">Endereço</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Imagem</th>
+                  <th className="px-4 py-3 font-medium">Ver no Mapa</th>
                   <th className="px-4 py-3 font-medium text-right">Ações</th>
                 </tr>
               </thead>
@@ -354,24 +389,60 @@ export function ActionsDashboard() {
                         ) : null}
                       </select>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3">
+                      {report.imageUrl ? (
+                        <ImagePreview
+                          imageUrl={report.imageUrl}
+                          alt={report.reportType}
+                          size="sm"
+                        />
+                      ) : (
+                        <span className="text-xs text-slate-500">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
                       <button
                         type="button"
-                        onClick={() => handleUpdateStatus(report.id)}
-                        disabled={
-                          mutation.isPending &&
-                          mutation.variables?.reportId === report.id
-                        }
-                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-3 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+                        onClick={() => {
+                          const params = new URLSearchParams();
+                          params.set("q", report.id);
+                          router.push(`/map?${params.toString()}`);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-1.5 text-xs font-medium text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/20"
+                        title="Ver no mapa"
                       >
-                        {mutation.isPending &&
-                        mutation.variables?.reportId === report.id ? (
-                          <Loader2 className="size-3 animate-spin" />
-                        ) : (
-                          <CheckCircle2 className="size-3" />
-                        )}
-                        Salvar
+                        <MapPin className="size-3" />
+                        Ver no Mapa
                       </button>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedReportForMessage({ id: report.id, reportType: report.reportType })}
+                          className="inline-flex items-center gap-2 rounded-xl border border-sky-500/50 bg-sky-500/10 px-3 py-2 text-xs font-medium text-sky-300 transition hover:border-sky-400 hover:bg-sky-500/20"
+                        >
+                          <MessageSquare className="size-3" />
+                          Mensagem
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(report.id)}
+                          disabled={
+                            mutation.isPending &&
+                            mutation.variables?.reportId === report.id
+                          }
+                          className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-3 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {mutation.isPending &&
+                          mutation.variables?.reportId === report.id ? (
+                            <Loader2 className="size-3 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="size-3" />
+                          )}
+                          Salvar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -381,7 +452,7 @@ export function ActionsDashboard() {
           </>
           ) : (
           <div className="flex h-48 items-center justify-center text-sm text-slate-400">
-            Nenhuma irregularidade encontrada com os filtros selecionados.
+            Nenhuma sugestão de melhoria encontrada com os filtros selecionados.
           </div>
         );
         })()}
@@ -482,6 +553,16 @@ export function ActionsDashboard() {
           );
         })()}
       </section>
+
+      {/* Modal de Enviar Mensagem */}
+      {selectedReportForMessage && (
+        <SendMessageModal
+          isOpen={!!selectedReportForMessage}
+          onClose={() => setSelectedReportForMessage(null)}
+          reportId={selectedReportForMessage.id}
+          reportType={selectedReportForMessage.reportType}
+        />
+      )}
     </div>
   );
 }

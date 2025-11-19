@@ -10,7 +10,7 @@ const values = [
   {
     name: "Visão",
     description:
-      "Ser a plataforma líder em gestão de irregularidades urbanas no Brasil, conectando milhões de cidadãos com suas prefeituras.",
+      "Ser a plataforma líder em gestão de sugestões de melhorias urbanas no Brasil, conectando milhões de cidadãos com suas prefeituras.",
     icon: Zap,
   },
   {
@@ -41,7 +41,7 @@ export default function SobrePage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400 sm:text-xl">
             Somos uma plataforma inovadora que conecta cidadãos e prefeituras,
-            facilitando a gestão de irregularidades urbanas através de
+            facilitando a gestão de sugestões de melhorias urbanas através de
             tecnologia de ponta.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function SobrePage() {
           <div className="mt-8 space-y-6 text-lg text-slate-400">
             <p>
               O ResolveAI nasceu da necessidade de modernizar a comunicação
-              entre cidadãos e prefeituras. Percebemos que muitas irregularidades
+              entre cidadãos e prefeituras. Percebemos que muitas sugestões de melhorias
               urbanas poderiam ser resolvidas mais rapidamente com uma plataforma
               dedicada e intuitiva.
             </p>
