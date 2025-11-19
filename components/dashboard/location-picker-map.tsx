@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Search, X, Loader2 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
@@ -28,6 +28,22 @@ const Marker = dynamic(
   async () => {
     const mod = await import("react-leaflet");
     return mod.Marker;
+  },
+  { ssr: false }
+);
+
+// Componente para definir a referência do mapa usando useMap hook
+const MapRefSetter = dynamic(
+  async () => {
+    const mod = await import("react-leaflet");
+    const { useMap } = mod;
+    return function MapRefSetter({ mapRef }: { mapRef: React.MutableRefObject<L.Map | null> }) {
+      const map = useMap();
+      React.useEffect(() => {
+        mapRef.current = map;
+      }, [map, mapRef]);
+      return null;
+    };
   },
   { ssr: false }
 );
@@ -450,10 +466,8 @@ export function LocationPickerMap({
               : 12
           }
           style={{ height: "100%", width: "100%" }}
-          whenCreated={(map) => {
-            mapRef.current = map;
-          }}
         >
+          <MapRefSetter mapRef={mapRef} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
