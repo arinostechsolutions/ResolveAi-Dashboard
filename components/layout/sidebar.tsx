@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
-import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp, LogOut, Sparkles } from "lucide-react";
+import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, TrendingUp, LogOut, Sparkles, Smartphone } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useState, useCallback } from "react";
 import { useAuth } from "@/context/auth-context";
@@ -20,6 +20,7 @@ const iconComponents = {
   MessageSquare,
   TrendingUp,
   Sparkles,
+  Smartphone,
 };
 
 export function Sidebar() {
@@ -34,13 +35,32 @@ export function Sidebar() {
   // Prefeitos também têm acesso completo (mas apenas à sua cidade)
   const hasFullAccess = isSuperAdmin || isMayor;
   
+  // Debug: log para verificar permissões
+  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+    console.log("🔍 Sidebar Debug:", {
+      isSuperAdmin,
+      isMayor,
+      hasFullAccess,
+      admin: admin ? { isSuperAdmin: admin.isSuperAdmin, isMayor: admin.isMayor } : null,
+    });
+  }
+  
   // Contar observações não lidas apenas para secretarias
   const unreadCount = useUnreadObservationsCount(isSecretaria);
 
   const navItemsWithIcons = NAV_ITEMS.filter(
     (item) => {
+      // Se o item requer ambos (superAdminOnly E mayorOnly), verificar primeiro
+      if (item.superAdminOnly && item.mayorOnly) {
+        return hasFullAccess || isMayor;
+      }
+      
+      // Se o item requer super admin, verificar se tem acesso completo
       if (item.superAdminOnly && !hasFullAccess) return false;
+      
+      // Se o item requer prefeito, verificar se é prefeito ou secretaria
       if (item.mayorOnly && !isMayor && !isSecretaria) return false;
+      
       return true;
     }
   ).map((item) => ({

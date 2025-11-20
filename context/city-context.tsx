@@ -8,12 +8,12 @@ import {
   Dispatch,
   SetStateAction,
   useMemo,
+  useEffect,
 } from "react";
-import { DEFAULT_CITY_ID } from "@/lib/constants";
 
 type CityContextValue = {
-  cityId: string;
-  setCityId: Dispatch<SetStateAction<string>>;
+  cityId: string | undefined;
+  setCityId: Dispatch<SetStateAction<string | undefined>>;
 };
 
 const CityContext = createContext<CityContextValue | undefined>(undefined);
@@ -24,11 +24,14 @@ type CityProviderProps = {
 };
 
 export function CityProvider({ children, initialCity }: CityProviderProps) {
-  const startCity = useMemo(
-    () => initialCity ?? DEFAULT_CITY_ID,
-    [initialCity],
-  );
-  const [cityId, setCityId] = useState(startCity);
+  const [cityId, setCityId] = useState<string | undefined>(initialCity);
+
+  // Atualizar cityId quando initialCity mudar
+  useEffect(() => {
+    if (initialCity) {
+      setCityId(initialCity);
+    }
+  }, [initialCity]);
 
   return (
     <CityContext.Provider value={{ cityId, setCityId }}>

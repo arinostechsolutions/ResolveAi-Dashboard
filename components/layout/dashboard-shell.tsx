@@ -9,7 +9,7 @@ import { SecretariaProvider } from "@/context/secretaria-context";
 import { SidebarProvider } from "@/context/sidebar-context";
 import { useAuth } from "@/context/auth-context";
 import { Loader2 } from "lucide-react";
-import { DEFAULT_CITY_ID } from "@/lib/constants";
+import { useCities } from "@/hooks/use-cities";
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -18,6 +18,10 @@ type DashboardShellProps = {
 export function DashboardShell({ children }: DashboardShellProps) {
   const { loading, admin } = useAuth();
   const [hasMounted, setHasMounted] = useState(false);
+  const isSuperAdmin = admin?.isSuperAdmin ?? false;
+  
+  // Buscar cidades do banco para super admins
+  const { data: citiesData, isLoading: citiesLoading } = useCities(isSuperAdmin);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setHasMounted(true));
@@ -41,14 +45,33 @@ export function DashboardShell({ children }: DashboardShellProps) {
     return null;
   }
 
+  // Determinar cidade inicial
+  let initialCity: string | undefined = undefined;
+  
+  if (admin.allowedCities && admin.allowedCities.length > 0) {
+    // Para não-super-admins, usar a primeira cidade permitida
+    initialCity = admin.allowedCities[0];
+  } else if (isSuperAdmin && citiesData && citiesData.length > 0) {
+    // Para super admins, usar a primeira cidade do banco de dados
+    initialCity = citiesData[0].id;
+  }
+
+  // Se ainda está carregando cidades e é super admin, mostrar loading
+  if (isSuperAdmin && citiesLoading && !initialCity) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-300">
+        <Loader2 className="size-6 animate-spin" />
+        <span className="ml-3 text-sm">Carregando cidades...</span>
+      </div>
+    );
+  }
+
   const cityKey =
     admin.allowedCities && admin.allowedCities.length > 0
       ? admin.allowedCities.join("|")
-      : "super";
-  const initialCity =
-    admin.allowedCities && admin.allowedCities.length > 0
-      ? admin.allowedCities[0]
-      : DEFAULT_CITY_ID;
+      : isSuperAdmin && citiesData
+      ? citiesData.map((c) => c.id).join("|")
+      : "default";
 
   return (
     <CityProvider key={cityKey} initialCity={initialCity}>

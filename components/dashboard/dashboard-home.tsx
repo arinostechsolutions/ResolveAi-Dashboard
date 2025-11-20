@@ -40,18 +40,18 @@ export function DashboardHome() {
   const [topReportsLimit, setTopReportsLimit] = useState(2);
 
   const overview = useDashboardOverview({
-    cityId,
+    cityId: cityId || "",
     ...dateRange,
     secretariaId: secretariaId || undefined,
   });
   const summary = useReportsSummary({
-    cityId,
+    cityId: cityId || "",
     ...dateRange,
     secretariaId: secretariaId || undefined,
   });
   // Buscar sugestões de melhorias em destaque (todas, ordenadas por engajamento)
   const topReports = useTopReports({
-    cityId,
+    cityId: cityId || "",
     sort: "engagement",
     status: "all", // Buscar todas para mostrar as mais engajadas
     page: topReportsPage,
@@ -62,7 +62,7 @@ export function DashboardHome() {
   // Buscar top 3 para o ranking (sem paginação)
   // Excluir resolvidos e respeitar filtro de data
   const rankingReports = useTopReports({
-    cityId,
+    cityId: cityId || "",
     sort: "engagement",
     status: "all", // Backend excluirá resolvidos automaticamente
     page: 1,
@@ -72,7 +72,7 @@ export function DashboardHome() {
     endDate: dateRange.endDate,
   });
   const map = useReportsMap({
-    cityId,
+    cityId: cityId || "",
     status: undefined, // Mostrar todas as sugestões de melhorias
     secretariaId: secretariaId || undefined,
   });

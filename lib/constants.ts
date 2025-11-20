@@ -42,6 +42,13 @@ export const NAV_ITEMS = [
     icon: "TrendingUp",
   },
   {
+    title: "Configuração Mobile",
+    href: "/mobile-config",
+    icon: "Smartphone",
+    superAdminOnly: true,
+    mayorOnly: true,
+  },
+  {
     title: "Perfil",
     href: "/profile",
     icon: "User",

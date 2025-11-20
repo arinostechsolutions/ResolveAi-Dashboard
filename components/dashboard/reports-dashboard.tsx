@@ -22,13 +22,13 @@ export function ReportsDashboard() {
   const { cityId } = useCity();
   const { secretariaId } = useSecretariaFilter();
   const summary = useReportsSummary({ 
-    cityId,
+    cityId: cityId || "",
     secretariaId: secretariaId || undefined,
   });
   const [topReportsPage, setTopReportsPage] = useState(1);
   const [topReportsLimit, setTopReportsLimit] = useState(2);
   const topReports = useTopReports({ 
-    cityId, 
+    cityId: cityId || "", 
     sort: "oldest", 
     status: "all", 
     limit: topReportsLimit,
