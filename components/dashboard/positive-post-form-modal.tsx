@@ -51,6 +51,7 @@ export function PositivePostFormModal({
       }
     }
     // Fallback: formatar o cityId como label
+    if (!cityId) return "";
     return cityId
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -145,7 +146,7 @@ export function PositivePostFormModal({
       return;
     }
 
-    if (!cityId) {
+    if (!cityId || cityId.trim() === "") {
       toast.error("Selecione uma cidade.");
       return;
     }

@@ -27,7 +27,7 @@ export function MapDashboard() {
   }, [statusOptionsQuery.data?.statuses]);
 
   const map = useReportsMap({
-    cityId,
+    cityId: cityId || "",
     status: status === "all" ? undefined : status,
     reportType: reportType || undefined,
     secretariaId: secretariaId || undefined,

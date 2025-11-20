@@ -45,7 +45,7 @@ export function ActionsDashboard() {
   const debouncedSearch = useDebouncedValue(searchTerm);
 
   const reportsQuery = useReportsList({
-    cityId,
+    cityId: cityId || "",
     status: statusFilter,
     search: debouncedSearch,
     page: currentPage,
