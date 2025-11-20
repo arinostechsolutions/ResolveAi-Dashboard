@@ -61,6 +61,11 @@ export function Sidebar() {
       // Se o item requer prefeito, verificar se é prefeito ou secretaria
       if (item.mayorOnly && !isMayor && !isSecretaria) return false;
       
+      // Configuração Mobile: permitir para todos os admins (prefeitos, secretarias e super admins)
+      if (item.href === "/mobile-config") {
+        return hasFullAccess || isMayor || isSecretaria;
+      }
+      
       return true;
     }
   ).map((item) => ({

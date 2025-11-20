@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { X, Check, Search } from "lucide-react";
-import { useCreateSecretaria, useReportTypes } from "@/hooks/use-secretarias";
+import { useState } from "react";
+import { X, Check } from "lucide-react";
+import { useCreateSecretaria } from "@/hooks/use-secretarias";
 
 type CreateSecretariaFormProps = {
   cityId: string;
@@ -17,27 +17,7 @@ export function CreateSecretariaForm({
 }: CreateSecretariaFormProps) {
   const [id, setId] = useState("");
   const [label, setLabel] = useState("");
-  const [selectedReportTypes, setSelectedReportTypes] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const createMutation = useCreateSecretaria();
-  const { data: reportTypesData } = useReportTypes(cityId);
-
-  const availableReportTypes = useMemo(() => {
-    const filtered = reportTypesData?.reportTypes.filter((rt) => !rt.secretaria) || [];
-    const sorted = [...filtered].sort((a, b) => 
-      a.label.localeCompare(b.label, "pt-BR", { sensitivity: "base" })
-    );
-    
-    if (!searchQuery.trim()) {
-      return sorted;
-    }
-    
-    const query = searchQuery.toLowerCase().trim();
-    return sorted.filter((rt) =>
-      rt.label.toLowerCase().includes(query) ||
-      rt.id.toLowerCase().includes(query)
-    );
-  }, [reportTypesData?.reportTypes, searchQuery]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,24 +41,14 @@ export function CreateSecretariaForm({
         payload: {
           id: id.trim(),
           label: label.trim(),
-          reportTypes: selectedReportTypes,
         },
       });
       setId("");
       setLabel("");
-      setSelectedReportTypes([]);
       onSuccess();
     } catch (error) {
       // Erro já é tratado no hook
     }
-  };
-
-  const toggleReportType = (reportTypeId: string) => {
-    setSelectedReportTypes((prev) =>
-      prev.includes(reportTypeId)
-        ? prev.filter((id) => id !== reportTypeId)
-        : [...prev, reportTypeId]
-    );
   };
 
   return (
@@ -129,47 +99,10 @@ export function CreateSecretariaForm({
             className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
             required
           />
+          <p className="mt-2 text-xs text-slate-500">
+            A associação de tipos de sugestão de melhoria é feita na aba "Configuração Mobile".
+          </p>
         </div>
-
-        {reportTypesData && reportTypesData.reportTypes.filter((rt) => !rt.secretaria).length > 0 && (
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-300">
-              Tipos de Sugestão de Melhoria
-            </label>
-            <div className="mb-2 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar tipos de sugestão de melhoria..."
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 pl-10 pr-4 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
-              />
-            </div>
-            {availableReportTypes.length > 0 ? (
-              <div className="max-h-48 space-y-2 overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 p-3">
-                {availableReportTypes.map((rt) => (
-                <label
-                  key={rt.id}
-                  className="flex items-center gap-2 rounded-lg p-2 hover:bg-slate-800"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedReportTypes.includes(rt.id)}
-                    onChange={() => toggleReportType(rt.id)}
-                    className="size-4 rounded border-slate-600 bg-slate-800 text-emerald-500 focus:ring-emerald-400"
-                  />
-                  <span className="text-sm text-slate-300">{rt.label}</span>
-                </label>
-              ))}
-              </div>
-            ) : (
-              <div className="rounded-xl border border-slate-700 bg-slate-950 p-4 text-center text-sm text-slate-400">
-                Nenhum tipo encontrado para "{searchQuery}"
-              </div>
-            )}
-          </div>
-        )}
 
         <div className="flex items-center gap-3">
           <button

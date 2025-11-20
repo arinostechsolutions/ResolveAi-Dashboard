@@ -7,7 +7,6 @@ import { toast } from "react-hot-toast";
 
 type SecretariasListProps = {
   secretarias: Secretaria[];
-  reportTypes: Array<{ id: string; label: string; secretaria: string | null }>;
   onEdit: (secretaria: Secretaria) => void;
   onCreateAdmin: (secretaria: Secretaria) => void;
   cityId: string;
@@ -15,7 +14,6 @@ type SecretariasListProps = {
 
 export function SecretariasList({
   secretarias,
-  reportTypes,
   onEdit,
   onCreateAdmin,
   cityId,
@@ -43,13 +41,6 @@ export function SecretariasList({
     } finally {
       setDeletingId(null);
     }
-  };
-
-  const getReportTypeLabels = (reportTypeIds: string[]) => {
-    return reportTypeIds
-      .map((id) => reportTypes.find((rt) => rt.id === id)?.label)
-      .filter(Boolean)
-      .join(", ");
   };
 
   if (secretarias.length === 0) {
@@ -85,16 +76,9 @@ export function SecretariasList({
                   <Users className="size-4" />
                   <span>{secretaria.adminCount} administrador(es)</span>
                 </div>
-                {secretaria.reportTypes.length > 0 ? (
-                  <div className="text-sm text-slate-300">
-                    <span className="text-slate-400">Tipos de sugestão de melhoria: </span>
-                    {getReportTypeLabels(secretaria.reportTypes)}
-                  </div>
-                ) : (
-                  <div className="text-sm text-amber-400">
-                    Nenhum tipo de sugestão de melhoria associado
-                  </div>
-                )}
+                <div className="text-xs text-slate-500">
+                  A associação de tipos de sugestão de melhoria é feita na aba "Configuração Mobile".
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">

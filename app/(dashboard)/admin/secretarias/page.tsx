@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useCity } from "@/context/city-context";
 import { useSecretariaFilter } from "@/context/secretaria-context";
-import { useSecretarias, useReportTypes, Secretaria } from "@/hooks/use-secretarias";
+import { useSecretarias, Secretaria } from "@/hooks/use-secretarias";
 import { SecretariasList } from "@/components/admin/secretarias-list";
 import { CreateSecretariaForm } from "@/components/admin/create-secretaria-form";
 import { EditSecretariaForm } from "@/components/admin/edit-secretaria-form";
@@ -44,7 +44,6 @@ export default function SecretariasPage() {
   const effectiveSecretariaId = selectedSecretariaId !== undefined ? selectedSecretariaId : globalSecretariaId || undefined;
 
   const { data: secretariasData, isLoading: isLoadingSecretarias } = useSecretarias(cityId);
-  const { data: reportTypesData, isLoading: isLoadingReportTypes } = useReportTypes(cityId);
   const { data: adminsData, isLoading: isLoadingAdmins } = useAdminUsers(cityId);
 
   // Filtrar administradores baseado na secretaria selecionada
@@ -328,14 +327,13 @@ export default function SecretariasPage() {
                 </button>
               </div>
 
-              {isLoadingSecretarias || isLoadingReportTypes ? (
+              {isLoadingSecretarias ? (
                 <div className="flex h-64 items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 text-slate-400">
                   Carregando secretarias...
                 </div>
-              ) : secretariasData && reportTypesData ? (
+              ) : secretariasData ? (
                 <SecretariasList
                   secretarias={secretariasData.secretarias}
-                  reportTypes={reportTypesData.reportTypes}
                   onEdit={setEditingSecretaria}
                   onCreateAdmin={setCreatingAdminFor}
                   cityId={cityId}
