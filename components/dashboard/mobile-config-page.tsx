@@ -23,11 +23,13 @@ export function MobileConfigPage() {
   const [cityNotFound, setCityNotFound] = useState(false);
   const [waitingForCity, setWaitingForCity] = useState(true);
 
-  // Verificar se tem permissão (apenas prefeitos e super admins)
-  const hasPermission = admin?.isMayor || admin?.isSuperAdmin;
+  // Permitir que todos os admins vejam a página (prefeitos, secretarias e super admins)
+  const canView = admin?.isMayor || admin?.isSuperAdmin || (admin?.secretaria && !admin?.isSuperAdmin && !admin?.isMayor);
+  // Prefeitos e super admins podem alterar showFeed e showMap
+  const canEditConfig = (admin?.isSuperAdmin || admin?.isMayor) ?? false;
 
   useEffect(() => {
-    if (!hasPermission) {
+    if (!canView) {
       setLoading(false);
       setWaitingForCity(false);
       return;
@@ -43,7 +45,7 @@ export function MobileConfigPage() {
     // Se chegou aqui, cityId é válido
     setWaitingForCity(false);
     fetchConfig();
-  }, [cityId, hasPermission]);
+  }, [cityId, canView]);
 
   const fetchConfig = async () => {
     // Validação adicional: não fazer requisição se cityId não for válido
@@ -77,7 +79,7 @@ export function MobileConfigPage() {
   };
 
   const updateConfig = async (field: "showFeed" | "showMap", value: boolean) => {
-    if (!hasPermission || !cityId || saving) return;
+    if (!canEditConfig || !cityId || saving) return;
 
     try {
       setSaving(true);
@@ -102,7 +104,7 @@ export function MobileConfigPage() {
     }
   };
 
-  if (!hasPermission) {
+  if (!canView) {
     return (
       <div className="space-y-6">
         <div>
@@ -113,7 +115,7 @@ export function MobileConfigPage() {
         </div>
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-6 text-center">
           <p className="text-red-400 font-medium">
-            Acesso negado. Apenas prefeitos e super administradores podem alterar esta configuração.
+            Acesso negado. Apenas administradores podem acessar esta página.
           </p>
         </div>
       </div>
@@ -203,7 +205,7 @@ export function MobileConfigPage() {
             <ToggleSwitch
               enabled={config.showFeed}
               onToggle={(enabled) => updateConfig("showFeed", enabled)}
-              disabled={saving}
+              disabled={saving || !canEditConfig}
             />
           </div>
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
@@ -238,7 +240,7 @@ export function MobileConfigPage() {
             <ToggleSwitch
               enabled={config.showMap}
               onToggle={(enabled) => updateConfig("showMap", enabled)}
-              disabled={saving}
+              disabled={saving || !canEditConfig}
             />
           </div>
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
@@ -262,6 +264,11 @@ export function MobileConfigPage() {
         <p className="text-sm text-slate-400">
           <strong className="text-slate-300">Nota:</strong> As alterações serão aplicadas imediatamente no aplicativo mobile. 
           Os usuários precisarão atualizar o aplicativo para ver as mudanças.
+          {!canEditConfig && (
+            <span className="block mt-2 text-amber-400">
+              ⚠️ Apenas super administradores podem alterar as configurações de Feed e Mapa.
+            </span>
+          )}
         </p>
       </div>
 

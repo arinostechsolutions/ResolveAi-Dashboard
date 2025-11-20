@@ -45,8 +45,7 @@ export const NAV_ITEMS = [
     title: "Configuração Mobile",
     href: "/mobile-config",
     icon: "Smartphone",
-    superAdminOnly: true,
-    mayorOnly: true,
+    // Permitir que prefeitos e secretarias vejam, mas apenas super admins podem alterar showFeed/showMap
   },
   {
     title: "Perfil",

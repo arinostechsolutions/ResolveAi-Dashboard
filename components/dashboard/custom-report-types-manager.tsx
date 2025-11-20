@@ -56,14 +56,20 @@ export function CustomReportTypesManager() {
   const [waitingForCity, setWaitingForCity] = useState(true);
   const [actionModal, setActionModal] = useState<{
     isOpen: boolean;
-    action: "deactivate" | "activate";
+    action: "deactivate" | "activate" | "delete";
     typeId?: string;
     multiple?: boolean;
   }>({ isOpen: false, action: "deactivate" });
 
-  const hasPermission = admin?.isMayor || admin?.isSuperAdmin;
+  // Permitir que secretarias vejam o componente e tenham acesso completo ao CRUD
+  const hasPermission = admin?.isMayor || admin?.isSuperAdmin || (admin?.secretaria && !admin?.isMayor && !admin?.isSuperAdmin);
   const isSuperAdmin = admin?.isSuperAdmin ?? false;
   const isMayor = admin?.isMayor ?? false;
+  const isSecretaria = !isSuperAdmin && !isMayor && !!admin?.secretaria;
+  // secretaria pode ser string ou objeto com id
+  const secretariaId = typeof admin?.secretaria === 'string' 
+    ? admin.secretaria 
+    : (admin?.secretaria as any)?.id || admin?.secretaria;
 
   useEffect(() => {
     // Aguardar até que cityId seja válido (não undefined, null, ou vazio)
@@ -130,13 +136,19 @@ export function CustomReportTypesManager() {
   const handleCreate = async (label: string, allowedSecretarias: string[]) => {
     if (!cityId) return;
 
+    // Se for secretaria, garantir que só envia sua própria secretaria
+    let finalAllowedSecretarias = allowedSecretarias;
+    if (isSecretaria && secretariaId) {
+      finalAllowedSecretarias = [secretariaId];
+    }
+
     try {
       const response = await apiClient.post<{
         message: string;
         reportType: ReportType;
       }>(`/api/cities/report-types/${cityId}`, {
         label,
-        allowedSecretarias,
+        allowedSecretarias: finalAllowedSecretarias,
       });
 
       setTypes((prev) => [...prev, response.data.reportType]);
@@ -207,6 +219,31 @@ export function CustomReportTypesManager() {
       toast.error(
         error?.response?.data?.message || "Erro ao alterar status do tipo"
       );
+    }
+  };
+
+  const handleDelete = async (typeId: string) => {
+    if (!cityId) return;
+
+    try {
+      setIsDeleting(true);
+      await apiClient.delete(`/api/cities/report-types/${cityId}/${typeId}`);
+
+      setTypes((prev) => prev.filter((t) => t.id !== typeId));
+      setSelectedIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(typeId);
+        return newSet;
+      });
+      toast.success("Tipo deletado com sucesso!");
+      setActionModal({ isOpen: false, action: "delete" });
+    } catch (error: any) {
+      console.error("Erro ao deletar tipo:", error);
+      toast.error(
+        error?.response?.data?.message || "Erro ao deletar tipo"
+      );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -303,20 +340,61 @@ export function CustomReportTypesManager() {
   };
 
   const canEdit = (type: ReportType): boolean => {
+    // Super Admin: pode editar TODOS os tipos (padrão + personalizados, criados por qualquer admin)
     if (isSuperAdmin) return true;
-    if (isMayor && type.isCustom && type.createdBy?.adminId === admin?.userId) return true;
+    // Prefeitos podem editar todos os tipos personalizados
+    if (isMayor && type.isCustom) return true;
+    // Secretarias só podem editar tipos que criaram ou que estão associados à sua secretaria
+    if (isSecretaria && secretariaId && type.isCustom) {
+      if (type.createdBy?.adminId === admin?.userId) return true;
+      if (type.allowedSecretarias?.includes(secretariaId)) return true;
+    }
     return false;
   };
 
   const canDeactivate = (type: ReportType): boolean => {
+    // Super Admin: pode desativar TODOS os tipos (padrão + personalizados, criados por qualquer admin)
     if (isSuperAdmin) return true;
-    if (isMayor && type.isCustom && type.createdBy?.adminId === admin?.userId) return true;
+    // Prefeitos podem desativar TODOS os tipos (padrão + personalizados)
+    if (isMayor) return true;
+    // Secretarias só podem desativar tipos personalizados que criaram OU que estão associados à sua secretaria
+    // Secretarias NÃO podem desativar tipos padrão
+    if (isSecretaria && secretariaId && type.isCustom) {
+      // Se criou, pode desativar
+      if (type.createdBy?.adminId === admin?.userId) return true;
+      // Se está em allowedSecretarias e é da sua secretaria, pode desativar
+      if (type.allowedSecretarias?.includes(secretariaId)) return true;
+    }
     return false;
   };
 
   const canActivate = (type: ReportType): boolean => {
+    // Super Admin: pode ativar TODOS os tipos (padrão + personalizados, criados por qualquer admin)
     if (isSuperAdmin) return true;
-    if (isMayor && type.isCustom && type.createdBy?.adminId === admin?.userId) return true;
+    // Prefeitos podem ativar TODOS os tipos (padrão + personalizados)
+    if (isMayor) return true;
+    // Secretarias só podem ativar tipos personalizados que criaram OU que estão associados à sua secretaria
+    // Secretarias NÃO podem ativar tipos padrão
+    if (isSecretaria && secretariaId && type.isCustom) {
+      // Se criou, pode ativar
+      if (type.createdBy?.adminId === admin?.userId) return true;
+      // Se está em allowedSecretarias e é da sua secretaria, pode ativar
+      if (type.allowedSecretarias?.includes(secretariaId)) return true;
+    }
+    return false;
+  };
+
+  const canDelete = (type: ReportType): boolean => {
+    // Super Admin: pode deletar TODOS os tipos (padrão + personalizados)
+    if (isSuperAdmin) return true;
+    // Prefeitos podem deletar TODOS os tipos (padrão + personalizados)
+    // Isso inclui tipos padrão do sistema
+    if (isMayor) return true;
+    // Secretarias só podem deletar tipos personalizados que criaram
+    // Secretarias NÃO podem deletar tipos padrão
+    if (isSecretaria && type.isCustom && type.createdBy?.adminId === admin?.userId) {
+      return true;
+    }
     return false;
   };
 
@@ -476,6 +554,7 @@ export function CustomReportTypesManager() {
                       const canDeactivateType = canDeactivate(type) && type.isActive !== false;
                       const canActivateType = canActivate(type) && type.isActive === false;
                       const canEditType = canEdit(type);
+                      const canDeleteType = canDelete(type);
 
                       return (
                         <div
@@ -569,6 +648,17 @@ export function CustomReportTypesManager() {
                                 <CheckCircle2 className="size-4" />
                               </button>
                             )}
+                            {canDeleteType && (
+                              <button
+                                onClick={() => {
+                                  setActionModal({ isOpen: true, action: "delete", typeId: type.id, multiple: false });
+                                }}
+                                className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-400 transition-colors hover:bg-red-500/20"
+                                title="Deletar"
+                              >
+                                <Trash2 className="size-4" />
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
@@ -649,7 +739,11 @@ export function CustomReportTypesManager() {
                 handleActivateMultiple();
               }
             } else if (actionModal.typeId) {
-              handleToggleStatus(actionModal.typeId, actionModal.action === "activate");
+              if (actionModal.action === "delete") {
+                handleDelete(actionModal.typeId);
+              } else {
+                handleToggleStatus(actionModal.typeId, actionModal.action === "activate");
+              }
             }
           }}
           onCancel={() => setActionModal({ isOpen: false, action: "deactivate" })}
@@ -667,10 +761,18 @@ type TypeFormProps = {
 };
 
 function TypeForm({ secretarias, type, onSave, onCancel }: TypeFormProps) {
+  const { admin } = useAuth();
+  const isSecretaria = !admin?.isSuperAdmin && !admin?.isMayor && !!admin?.secretaria;
+  const secretariaId = typeof admin?.secretaria === 'string' 
+    ? admin.secretaria 
+    : (admin?.secretaria as any)?.id || admin?.secretaria;
+  
   const [label, setLabel] = useState(type?.label || "");
-  const [selectedSecretarias, setSelectedSecretarias] = useState<string[]>(
-    type?.allowedSecretarias || []
-  );
+  // Se for secretaria criando novo tipo, já começar com sua secretaria selecionada
+  const initialSecretarias = isSecretaria && !type 
+    ? [secretariaId].filter(Boolean)
+    : (type?.allowedSecretarias || []);
+  const [selectedSecretarias, setSelectedSecretarias] = useState<string[]>(initialSecretarias);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -713,33 +815,43 @@ function TypeForm({ secretarias, type, onSave, onCancel }: TypeFormProps) {
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Secretarias Permitidas
           </label>
-          <p className="mb-3 text-xs text-slate-500">
-            Selecione quais secretarias podem usar este tipo ao criar sugestões.
-            Deixe vazio para permitir todas.
-          </p>
-          {secretarias.length === 0 ? (
-            <p className="text-sm text-slate-500">
-              Nenhuma secretaria cadastrada nesta cidade.
-            </p>
-          ) : (
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {secretarias.map((secretaria) => (
-                <label
-                  key={secretaria.id}
-                  className="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/50 p-3 cursor-pointer hover:bg-slate-900 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedSecretarias.includes(secretaria.id)}
-                    onChange={() => toggleSecretaria(secretaria.id)}
-                    className="rounded border-slate-600 text-emerald-500 focus:ring-emerald-500"
-                  />
-                  <span className="text-sm text-slate-300">
-                    {secretaria.label}
-                  </span>
-                </label>
-              ))}
+          {isSecretaria ? (
+            <div className="rounded-lg border border-slate-700 bg-slate-900/50 p-3">
+              <p className="text-sm text-slate-400">
+                Este tipo será automaticamente associado à sua secretaria ({secretarias.find(s => s.id === secretariaId)?.label || 'Sua Secretaria'}).
+              </p>
             </div>
+          ) : (
+            <>
+              <p className="mb-3 text-xs text-slate-500">
+                Selecione quais secretarias podem usar este tipo ao criar sugestões.
+                Deixe vazio para permitir todas.
+              </p>
+              {secretarias.length === 0 ? (
+                <p className="text-sm text-slate-500">
+                  Nenhuma secretaria cadastrada nesta cidade.
+                </p>
+              ) : (
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {secretarias.map((secretaria) => (
+                    <label
+                      key={secretaria.id}
+                      className="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/50 p-3 cursor-pointer hover:bg-slate-900 transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedSecretarias.includes(secretaria.id)}
+                        onChange={() => toggleSecretaria(secretaria.id)}
+                        className="rounded border-slate-600 text-emerald-500 focus:ring-emerald-500"
+                      />
+                      <span className="text-sm text-slate-300">
+                        {secretaria.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
@@ -767,7 +879,7 @@ function TypeForm({ secretarias, type, onSave, onCancel }: TypeFormProps) {
 
 type StatusConfirmationModalProps = {
   isOpen: boolean;
-  action: "deactivate" | "activate";
+  action: "deactivate" | "activate" | "delete";
   typeId?: string;
   multiple?: boolean;
   types: ReportType[];
@@ -797,6 +909,7 @@ function StatusConfirmationModal({
     : [];
 
   const isActivating = action === "activate";
+  const isDeletingAction = action === "delete";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -804,9 +917,11 @@ function StatusConfirmationModal({
         {/* Header */}
         <div className="flex items-center gap-4 border-b border-slate-700 p-6">
           <div className={`flex size-12 items-center justify-center rounded-full ${
-            isActivating ? "bg-emerald-500/20" : "bg-amber-500/20"
+            isDeletingAction ? "bg-red-500/20" : isActivating ? "bg-emerald-500/20" : "bg-amber-500/20"
           }`}>
-            {isActivating ? (
+            {isDeletingAction ? (
+              <Trash2 className="size-6 text-red-400" />
+            ) : isActivating ? (
               <CheckCircle2 className="size-6 text-emerald-400" />
             ) : (
               <AlertTriangle className="size-6 text-amber-400" />
@@ -814,10 +929,12 @@ function StatusConfirmationModal({
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-slate-200">
-              Confirmar {isActivating ? "Ativação" : "Desativação"}
+              {isDeletingAction ? "Confirmar Exclusão" : `Confirmar ${isActivating ? "Ativação" : "Desativação"}`}
             </h3>
             <p className="mt-1 text-sm text-slate-400">
-              {isActivating
+              {isDeletingAction
+                ? "Esta ação não pode ser desfeita"
+                : isActivating
                 ? "O tipo será exibido no aplicativo mobile"
                 : "O tipo será ocultado do aplicativo mobile"}
             </p>
@@ -828,8 +945,8 @@ function StatusConfirmationModal({
         <div className="p-6">
           <p className="mb-4 text-sm text-slate-300">
             {multiple
-              ? `Tem certeza que deseja ${isActivating ? "ativar" : "desativar"} ${typesToChange.length} tipo(s)?`
-              : `Tem certeza que deseja ${isActivating ? "ativar" : "desativar"} o tipo "${typesToChange[0]?.label}"?`}
+              ? `Tem certeza que deseja ${isDeletingAction ? "deletar" : isActivating ? "ativar" : "desativar"} ${typesToChange.length} tipo(s)?`
+              : `Tem certeza que deseja ${isDeletingAction ? "deletar" : isActivating ? "ativar" : "desativar"} o tipo "${typesToChange[0]?.label}"?`}
           </p>
 
           {typesToChange.length > 0 && (
@@ -857,20 +974,30 @@ function StatusConfirmationModal({
             </div>
           )}
 
-          <div className={`mt-4 rounded-lg border p-3 ${
-            isActivating
-              ? "border-emerald-500/30 bg-emerald-500/10"
-              : "border-amber-500/30 bg-amber-500/10"
-          }`}>
-            <p className={`text-xs ${
-              isActivating ? "text-emerald-400" : "text-amber-400"
+          {!isDeletingAction && (
+            <div className={`mt-4 rounded-lg border p-3 ${
+              isActivating
+                ? "border-emerald-500/30 bg-emerald-500/10"
+                : "border-amber-500/30 bg-amber-500/10"
             }`}>
-              <strong className="font-semibold">Atenção:</strong>{" "}
-              {isActivating
-                ? "Os tipos ativados aparecerão novamente no aplicativo mobile para novos reports."
-                : "Os tipos desativados não aparecerão mais no aplicativo mobile para novos reports, mas você pode reativá-los a qualquer momento. Os reports já criados continuarão existindo normalmente."}
-            </p>
-          </div>
+              <p className={`text-xs ${
+                isActivating ? "text-emerald-400" : "text-amber-400"
+              }`}>
+                <strong className="font-semibold">Atenção:</strong>{" "}
+                {isActivating
+                  ? "Os tipos ativados aparecerão novamente no aplicativo mobile para novos reports."
+                  : "Os tipos desativados não aparecerão mais no aplicativo mobile para novos reports, mas você pode reativá-los a qualquer momento. Os reports já criados continuarão existindo normalmente."}
+              </p>
+            </div>
+          )}
+          {isDeletingAction && (
+            <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+              <p className="text-xs text-red-400">
+                <strong className="font-semibold">Atenção:</strong>{" "}
+                Esta ação é permanente e não pode ser desfeita. O tipo será completamente removido do sistema e não poderá ser recuperado.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
@@ -886,7 +1013,9 @@ function StatusConfirmationModal({
             onClick={onConfirm}
             disabled={isDeleting}
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50 ${
-              isActivating
+              isDeletingAction
+                ? "bg-red-500 hover:bg-red-600"
+                : isActivating
                 ? "bg-emerald-500 hover:bg-emerald-600"
                 : "bg-amber-500 hover:bg-amber-600"
             }`}
@@ -894,16 +1023,18 @@ function StatusConfirmationModal({
             {isDeleting ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                {isActivating ? "Ativando..." : "Desativando..."}
+                {isDeletingAction ? "Deletando..." : isActivating ? "Ativando..." : "Desativando..."}
               </>
             ) : (
               <>
-                {isActivating ? (
+                {isDeletingAction ? (
+                  <Trash2 className="size-4" />
+                ) : isActivating ? (
                   <CheckCircle2 className="size-4" />
                 ) : (
                   <AlertTriangle className="size-4" />
                 )}
-                Sim, {isActivating ? "Ativar" : "Desativar"}
+                Sim, {isDeletingAction ? "Deletar" : isActivating ? "Ativar" : "Desativar"}
               </>
             )}
           </button>
