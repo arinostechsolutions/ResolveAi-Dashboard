@@ -1,29 +1,90 @@
-export const NAV_ITEMS = [
-  {
-    title: "Visão Geral",
-    href: "/dashboard",
-    icon: "LayoutDashboard",
-  },
-  {
-    title: "Relatórios",
-    href: "/reports",
-    icon: "BarChart3",
-  },
-  {
-    title: "Mapa",
-    href: "/map",
-    icon: "Map",
-  },
-  {
-    title: "Ações",
-    href: "/actions",
-    icon: "ClipboardCheck",
-  },
+export type NavItem = {
+  title: string;
+  href?: string;
+  icon: string;
+  superAdminOnly?: boolean;
+  mayorOnly?: boolean;
+  children?: NavItem[];
+};
+
+export const NAV_ITEMS: NavItem[] = [
   {
     title: "Cadastros",
     href: "/admin/secretarias",
     icon: "Settings",
     superAdminOnly: true,
+  },
+  {
+    title: "Configuração Mobile",
+    href: "/mobile-config",
+    icon: "Smartphone",
+  },
+  {
+    title: "Saúde",
+    icon: "Heart",
+    children: [
+      {
+        title: "Gerenciar",
+        href: "/saude/gerenciar",
+        icon: "Settings",
+      },
+      {
+        title: "Relatórios",
+        href: "/saude/relatorios",
+        icon: "BarChart3",
+      },
+      {
+        title: "Gráficos",
+        href: "/saude/graficos",
+        icon: "TrendingUp",
+      },
+    ],
+  },
+  {
+    title: "Eventos",
+    href: "/events",
+    icon: "Calendar",
+  },
+  {
+    title: "IPTU",
+    href: "/iptu",
+    icon: "Receipt",
+  },
+  {
+    title: "Melhorias",
+    icon: "ClipboardCheck",
+    children: [
+      {
+        title: "Visão Geral",
+        href: "/melhorias/visao-geral",
+        icon: "LayoutDashboard",
+      },
+      {
+        title: "Relatórios",
+        href: "/melhorias/relatorios",
+        icon: "BarChart3",
+      },
+      {
+        title: "Mapa",
+        href: "/melhorias/mapa",
+        icon: "Map",
+      },
+      {
+        title: "Ações",
+        href: "/melhorias/acoes",
+        icon: "ClipboardCheck",
+      },
+      {
+        title: "Gráficos",
+        href: "/melhorias/graficos",
+        icon: "TrendingUp",
+      },
+      {
+        title: "Tipos de Sugestões",
+        href: "/melhorias/tipos-de-sugestoes",
+        icon: "List",
+      },
+    ],
   },
   {
     title: "Observações",
@@ -35,17 +96,6 @@ export const NAV_ITEMS = [
     title: "Posts Positivos",
     href: "/positive-posts",
     icon: "Sparkles",
-  },
-  {
-    title: "Gráficos",
-    href: "/analytics",
-    icon: "TrendingUp",
-  },
-  {
-    title: "Configuração Mobile",
-    href: "/mobile-config",
-    icon: "Smartphone",
-    // Permitir que prefeitos e secretarias vejam, mas apenas super admins podem alterar showFeed/showMap
   },
   {
     title: "Perfil",

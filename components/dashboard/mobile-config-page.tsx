@@ -6,7 +6,6 @@ import { useAuth } from "@/context/auth-context";
 import { Loader2, Smartphone, Wifi, WifiOff, Map, MapPin } from "lucide-react";
 import { toast } from "react-hot-toast";
 import apiClient from "@/lib/api-client";
-import { CustomReportTypesManager } from "./custom-report-types-manager";
 import { ServiceUnavailable } from "../errors/service-unavailable";
 
 type MobileConfig = {
@@ -257,6 +256,7 @@ export function MobileConfigPage() {
             )}
           </div>
         </div>
+
       </div>
 
       {/* Informação adicional */}
@@ -266,15 +266,10 @@ export function MobileConfigPage() {
           Os usuários precisarão atualizar o aplicativo para ver as mudanças.
           {!canEditConfig && (
             <span className="block mt-2 text-amber-400">
-              ⚠️ Apenas super administradores podem alterar as configurações de Feed e Mapa.
+              ⚠️ Apenas super administradores e prefeitos podem alterar as configurações de Feed e Mapa.
             </span>
           )}
         </p>
-      </div>
-
-      {/* Separador */}
-      <div className="border-t border-slate-700 pt-6">
-        <CustomReportTypesManager />
       </div>
     </div>
   );

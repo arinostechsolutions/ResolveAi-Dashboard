@@ -47,16 +47,16 @@ export function DashboardFilters({
   currentRange,
   onApply,
 }: DashboardFiltersProps) {
-  const [startDate, setStartDate] = useState<string>(currentRange.startDate ?? "");
-  const [endDate, setEndDate] = useState<string>(currentRange.endDate ?? "");
+  const [startDate, setStartDate] = useState<string>(currentRange?.startDate ?? "");
+  const [endDate, setEndDate] = useState<string>(currentRange?.endDate ?? "");
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      setStartDate(currentRange.startDate ?? "");
-      setEndDate(currentRange.endDate ?? "");
+      setStartDate(currentRange?.startDate ?? "");
+      setEndDate(currentRange?.endDate ?? "");
     });
     return () => cancelAnimationFrame(id);
-  }, [currentRange.startDate, currentRange.endDate]);
+  }, [currentRange?.startDate, currentRange?.endDate]);
 
   const handleApply = () => {
     onApply({
@@ -83,7 +83,7 @@ export function DashboardFilters({
 
   // Verificar qual intervalo rápido está ativo
   const activeQuickOption = useMemo(() => {
-    if (!currentRange.startDate || !currentRange.endDate) {
+    if (!currentRange?.startDate || !currentRange?.endDate) {
       return null;
     }
 
@@ -96,7 +96,7 @@ export function DashboardFilters({
     }
 
     return null;
-  }, [currentRange.startDate, currentRange.endDate]);
+  }, [currentRange?.startDate, currentRange?.endDate]);
 
   return (
     <div className="rounded-3xl border border-slate-800 bg-slate-900/60 px-3 py-4 shadow-lg shadow-slate-900/30 sm:px-4 sm:py-4 lg:px-6">

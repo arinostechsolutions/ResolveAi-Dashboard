@@ -39,7 +39,10 @@ export function NeighborhoodChart({ data, isLoading }: NeighborhoodChartProps) {
     return () => observer.disconnect();
   }, []);
 
-  const chartData = data.slice(0, 10).map((item) => ({
+  // Garantir que data é um array
+  const safeData = Array.isArray(data) ? data : [];
+  
+  const chartData = safeData.slice(0, 10).map((item) => ({
     bairro: item.bairro.length > 15 ? `${item.bairro.substring(0, 15)}...` : item.bairro,
     total: item.total,
     pendente: item.pendente,

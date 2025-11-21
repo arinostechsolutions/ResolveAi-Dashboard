@@ -27,10 +27,10 @@ export function CreateSecretariaForm({
     }
 
     // Validar formato do ID (slug)
-    const idRegex = /^[a-z0-9_]+$/;
+    const idRegex = /^[a-z0-9_-]+$/;
     if (!idRegex.test(id)) {
       alert(
-        "ID deve conter apenas letras minúsculas, números e underscore."
+        "ID deve conter apenas letras minúsculas, números, traços e underscore."
       );
       return;
     }
@@ -77,13 +77,20 @@ export function CreateSecretariaForm({
           <input
             type="text"
             value={id}
-            onChange={(e) => setId(e.target.value.toLowerCase())}
-            placeholder="ex: obras, meio_ambiente"
+            onChange={(e) => {
+              // Converter espaços em traços e manter apenas letras minúsculas, números, traços e underscores
+              const formatted = e.target.value
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^a-z0-9_-]/g, "");
+              setId(formatted);
+            }}
+            placeholder="ex: obras, meio-ambiente"
             className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30"
             required
           />
           <p className="mt-1 text-xs text-slate-500">
-            Apenas letras minúsculas, números e underscore
+            Apenas letras minúsculas, números, traços e underscore. Espaços são convertidos automaticamente em traços.
           </p>
         </div>
 
