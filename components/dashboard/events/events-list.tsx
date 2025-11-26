@@ -152,3 +152,6 @@ export function EventsList({ events, onEdit, onDelete }: EventsListProps) {
   );
 }
 
+
+
+

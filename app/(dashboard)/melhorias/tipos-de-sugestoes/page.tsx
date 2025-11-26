@@ -9,3 +9,6 @@ export default function TiposDeSugestoesPage() {
   return <CustomReportTypesManager />;
 }
 
+
+
+

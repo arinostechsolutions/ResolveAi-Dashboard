@@ -60,6 +60,14 @@ a {
   z-index: 6;
 }
 
+/* Garantir que marcadores de bloqueio sejam visíveis */
+.leaflet-marker-icon {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+}
+
 .leaflet-tooltip-pane {
   z-index: 7;
 }

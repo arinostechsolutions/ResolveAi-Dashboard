@@ -4,3 +4,6 @@ export default function MobileConfig() {
   return <MobileConfigPage />;
 }
 
+
+
+
