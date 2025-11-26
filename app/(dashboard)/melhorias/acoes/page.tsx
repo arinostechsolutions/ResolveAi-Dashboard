@@ -9,3 +9,6 @@ export default function AcoesPage() {
   return <ActionsDashboard />;
 }
 
+
+
+

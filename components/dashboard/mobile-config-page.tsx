@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useCity } from "@/context/city-context";
 import { useAuth } from "@/context/auth-context";
-import { Loader2, Smartphone, Wifi, WifiOff, Map, MapPin } from "lucide-react";
+import { Loader2, Smartphone, Wifi, WifiOff, Map, MapPin, Building2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import apiClient from "@/lib/api-client";
 import { ServiceUnavailable } from "../errors/service-unavailable";
@@ -11,6 +11,7 @@ import { ServiceUnavailable } from "../errors/service-unavailable";
 type MobileConfig = {
   showFeed: boolean;
   showMap: boolean;
+  showSmartCity?: boolean;
 };
 
 export function MobileConfigPage() {
@@ -71,13 +72,13 @@ export function MobileConfigPage() {
       
       toast.error("Erro ao carregar configuração mobile");
       // Valores padrão em caso de erro
-      setConfig({ showFeed: true, showMap: true });
+      setConfig({ showFeed: true, showMap: true, showSmartCity: false });
     } finally {
       setLoading(false);
     }
   };
 
-  const updateConfig = async (field: "showFeed" | "showMap", value: boolean) => {
+  const updateConfig = async (field: "showFeed" | "showMap" | "showSmartCity", value: boolean) => {
     if (!canEditConfig || !cityId || saving) return;
 
     try {
@@ -252,6 +253,41 @@ export function MobileConfigPage() {
               <>
                 <MapPin className="size-4 opacity-50" />
                 <span>Mapa desabilitado</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Cidade Inteligente */}
+        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className="rounded-lg bg-purple-500/10 p-3">
+                <Building2 className="size-6 text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-200">Cidade Inteligente</h3>
+                <p className="mt-1 text-sm text-slate-400">
+                  Exibir mapa interativo com pontos de interesse (interdições, eventos, unidades de saúde)
+                </p>
+              </div>
+            </div>
+            <ToggleSwitch
+              enabled={config.showSmartCity ?? false}
+              onToggle={(enabled) => updateConfig("showSmartCity", enabled)}
+              disabled={saving || !canEditConfig}
+            />
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
+            {config.showSmartCity ? (
+              <>
+                <Building2 className="size-4" />
+                <span>Cidade Inteligente habilitada</span>
+              </>
+            ) : (
+              <>
+                <Building2 className="size-4 opacity-50" />
+                <span>Cidade Inteligente desabilitada</span>
               </>
             )}
           </div>

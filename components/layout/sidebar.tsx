@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
-import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, ChevronDown, TrendingUp, LogOut, Sparkles, Smartphone, Heart, List, Calendar, Receipt } from "lucide-react";
+import { LayoutDashboard, BarChart3, Map, Menu, User, ClipboardCheck, Settings, MessageSquare, ChevronLeft, ChevronRight, ChevronDown, TrendingUp, LogOut, Sparkles, Smartphone, Heart, List, Calendar, Receipt, Phone, Newspaper, ArrowUpDown } from "lucide-react";
 import { NAV_ITEMS, type NavItem } from "@/lib/constants";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, startTransition } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useUnreadObservationsCount } from "@/hooks/use-observations";
 import { useSidebar } from "@/context/sidebar-context";
@@ -25,6 +25,9 @@ const iconComponents = {
   List,
   Calendar,
   Receipt,
+  Phone,
+  Newspaper,
+  ArrowUpDown,
 };
 
 export function Sidebar() {
@@ -40,7 +43,19 @@ export function Sidebar() {
   const hasFullAccess = isSuperAdmin || isMayor;
 
   // Contar observações não lidas apenas para secretarias
-  const unreadCount = useUnreadObservationsCount(isSecretaria);
+  // Usar enabled: false inicialmente e habilitar após um delay para não bloquear navegação
+  const [enableObservationsQuery, setEnableObservationsQuery] = useState(false);
+  const unreadCount = useUnreadObservationsCount(isSecretaria && enableObservationsQuery);
+  
+  // Habilitar query de observações após um pequeno delay para não bloquear navegação
+  useEffect(() => {
+    if (isSecretaria) {
+      const timer = setTimeout(() => {
+        setEnableObservationsQuery(true);
+      }, 500); // Delay de 500ms para não bloquear navegação inicial
+      return () => clearTimeout(timer);
+    }
+  }, [isSecretaria]);
 
   // Função para verificar se um item deve ser exibido
   const shouldShowItem = useCallback((item: NavItem): boolean => {
@@ -64,6 +79,14 @@ export function Sidebar() {
       return hasFullAccess || isMayor || isSecretaria;
     }
     
+    if (item.href === "/emergencies" || item.href?.startsWith("/emergencies")) {
+      return hasFullAccess || isMayor || isSecretaria;
+    }
+    
+    if (item.href === "/news" || item.href?.startsWith("/news")) {
+      return hasFullAccess || isMayor || isSecretaria;
+    }
+    
     if (item.href?.startsWith("/saude")) {
       return hasFullAccess || isMayor || isSecretaria;
     }
@@ -76,6 +99,7 @@ export function Sidebar() {
   }, [hasFullAccess, isMayor, isSecretaria]);
 
   // Filtrar e mapear itens do menu
+  // Memoizar apenas quando as dependências relevantes mudarem
   const navItemsWithIcons = useMemo(() => {
     const processItem = (item: NavItem): NavItem | null => {
       if (!shouldShowItem(item)) {
@@ -110,7 +134,7 @@ export function Sidebar() {
         ...item,
         Icon: iconComponents[item.icon as keyof typeof iconComponents] ?? LayoutDashboard,
       }));
-  }, [shouldShowItem]);
+  }, [hasFullAccess, isMayor, isSecretaria]); // Dependências mais específicas
 
   // Verificar se um menu está expandido
   const isMenuExpanded = useCallback((title: string) => {
@@ -150,10 +174,14 @@ export function Sidebar() {
   }, [isPathActive]);
 
   // Auto-expandir menus com filhos ativos
-  useMemo(() => {
+  useEffect(() => {
     navItemsWithIcons.forEach((item) => {
       if (item.children && hasActiveChild(item)) {
-        setExpandedMenus((prev) => new Set(prev).add(item.title));
+        setExpandedMenus((prev) => {
+          const next = new Set(prev);
+          next.add(item.title);
+          return next;
+        });
       }
     });
   }, [pathname, navItemsWithIcons, hasActiveChild]);
@@ -163,7 +191,10 @@ export function Sidebar() {
   const handleNavClick = useCallback((href: string) => {
     setIsOpen(false);
     if (pathname !== href) {
-      router.push(href);
+      // Usar startTransition para tornar a navegação não-bloqueante
+      startTransition(() => {
+        router.push(href);
+      });
     }
   }, [pathname, router]);
 

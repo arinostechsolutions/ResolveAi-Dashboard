@@ -15,9 +15,20 @@ export const NAV_ITEMS: NavItem[] = [
     superAdminOnly: true,
   },
   {
+    title: "Ordem do Menu Mobile",
+    href: "/menu-order",
+    icon: "ArrowUpDown",
+    superAdminOnly: true,
+  },
+  {
     title: "Configuração Mobile",
     href: "/mobile-config",
     icon: "Smartphone",
+  },
+  {
+    title: "Cidade Inteligente",
+    href: "/cidade-inteligente",
+    icon: "Map",
   },
   {
     title: "Saúde",
@@ -49,6 +60,16 @@ export const NAV_ITEMS: NavItem[] = [
     title: "IPTU",
     href: "/iptu",
     icon: "Receipt",
+  },
+  {
+    title: "Emergências",
+    href: "/emergencies",
+    icon: "Phone",
+  },
+  {
+    title: "Notícias",
+    href: "/news",
+    icon: "Newspaper",
   },
   {
     title: "Melhorias",

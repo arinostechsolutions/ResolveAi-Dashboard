@@ -10,6 +10,8 @@ export type MobileConfig = {
   showHealthAppointments?: boolean;
   showEvents?: boolean;
   showIptu?: boolean;
+  showEmergencies?: boolean;
+  showNews?: boolean;
 };
 
 async function fetchMobileConfig(cityId: string): Promise<MobileConfig> {
